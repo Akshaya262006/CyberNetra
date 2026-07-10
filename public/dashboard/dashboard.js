@@ -1126,6 +1126,11 @@
         document.getElementById("comp-similarity-score").style.color = "var(--accent-green)";
       }
 
+      // Hide watchlist action dynamically for Instagram comparisons
+      const isInstaCompare = cleanGenUrl.includes("instagram") || cleanSusUrl.includes("instagram") ||
+                             cleanGenUser.includes("instagram") || cleanSusUser.includes("instagram");
+      document.getElementById("comp-action-watchlist").style.display = isInstaCompare ? "none" : "block";
+
       // Render Comparison Tab
       renderComparisonTab(genUser, susUser, totalSim, "summary");
 
