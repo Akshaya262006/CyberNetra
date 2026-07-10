@@ -180,32 +180,32 @@
 
           <!-- Quick Action Tiles Grid -->
           <div class="quick-actions-row">
-            <div class="quick-action-tile">
+            <div class="quick-action-tile" onclick="window.switchTab('check-profile')">
               <div class="action-tile-icon"><i class="fa-solid fa-user-ninja"></i></div>
               <h4>Check Profile</h4>
               <p>Analyse a suspicious social-media account for fake-profile and identity impersonation signals.</p>
-              <button class="btn btn-primary btn-sm" onclick="window.switchTab('check-profile')">Start Check</button>
+              <button class="btn btn-primary btn-sm">Start Check</button>
             </div>
             
-            <div class="quick-action-tile tile-cyan">
+            <div class="quick-action-tile tile-cyan" onclick="window.switchTab('verify-media')">
               <div class="action-tile-icon"><i class="fa-solid fa-photo-film"></i></div>
               <h4>Verify Media</h4>
               <p>Check an image, video or audio clip for digital editing, metadata changes or AI deepfakes.</p>
-              <button class="btn btn-primary btn-sm" onclick="window.switchTab('verify-media')">Upload Media</button>
+              <button class="btn btn-primary btn-sm">Upload Media</button>
             </div>
 
-            <div class="quick-action-tile tile-red">
+            <div class="quick-action-tile tile-red" onclick="window.switchTab('my-reports')">
               <div class="action-tile-icon"><i class="fa-solid fa-file-invoice"></i></div>
               <h4>Report Cybercrime</h4>
               <p>Submit suspicious incident details and forensic analysis evidence directly to inspectors.</p>
-              <button class="btn btn-primary btn-sm" onclick="window.switchTab('my-reports')">Create Report</button>
+              <button class="btn btn-primary btn-sm">Create Report</button>
             </div>
 
-            <div class="quick-action-tile tile-green">
+            <div class="quick-action-tile tile-green" onclick="window.switchTab('my-reports')">
               <div class="action-tile-icon"><i class="fa-solid fa-list-check"></i></div>
               <h4>Track Reports</h4>
               <p>Check processing updates, officer requests, and action resolutions for submitted cases.</p>
-              <button class="btn btn-primary btn-sm" onclick="window.switchTab('my-reports')">View My Reports</button>
+              <button class="btn btn-primary btn-sm">View My Reports</button>
             </div>
           </div>
 
@@ -309,18 +309,18 @@
               <p style="color:var(--text-muted); font-size:14px; margin-bottom: 28px">Analyse suspicious social-media profiles, identify possible impersonation and check whether profile images have been reused.</p>
               
               <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px;">
-                <div class="quick-action-tile tile-cyan" style="height: auto; padding: 24px; text-align: left; display: flex; flex-direction: column; gap: 12px;">
+                <div class="quick-action-tile tile-cyan" style="height: auto; padding: 24px; text-align: left; display: flex; flex-direction: column; gap: 12px;" onclick="window.switchCheckProfileSubscreen('input')">
                   <div class="action-tile-icon"><i class="fa-solid fa-user-ninja"></i></div>
                   <h3 style="color:#fff; margin:0">Quick Profile Check</h3>
                   <p style="font-size:13.5px; color:var(--accent-soft); line-height:1.6; margin:0">Analyse one suspicious profile for account behaviour, identity inconsistency, copied content, suspicious links and image reuse.</p>
-                  <button class="btn btn-primary btn-block btn-sm" id="btn-start-quick-check" style="margin-top:auto" onclick="window.switchCheckProfileSubscreen('input')">Start Profile Check</button>
+                  <button class="btn btn-primary btn-block btn-sm" id="btn-start-quick-check" style="margin-top:auto">Start Profile Check</button>
                 </div>
 
-                <div class="quick-action-tile tile-orange" style="height: auto; padding: 24px; text-align: left; display: flex; flex-direction: column; gap: 12px;">
+                <div class="quick-action-tile tile-orange" style="height: auto; padding: 24px; text-align: left; display: flex; flex-direction: column; gap: 12px;" onclick="window.switchCheckProfileSubscreen('compare')">
                   <div class="action-tile-icon"><i class="fa-solid fa-users-viewfinder"></i></div>
                   <h3 style="color:#fff; margin:0">Identity Misuse Check</h3>
                   <p style="font-size:13.5px; color:var(--accent-soft); line-height:1.6; margin:0">Compare a genuine profile with a suspicious profile to detect possible impersonation, copied identity information and reused images.</p>
-                  <button class="btn btn-primary btn-block btn-sm" id="btn-start-impersonation-check" style="margin-top:auto" onclick="window.switchCheckProfileSubscreen('compare')">Compare Profiles</button>
+                  <button class="btn btn-primary btn-block btn-sm" id="btn-start-impersonation-check" style="margin-top:auto">Compare Profiles</button>
                 </div>
               </div>
 
