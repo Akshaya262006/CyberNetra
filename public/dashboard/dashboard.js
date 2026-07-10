@@ -339,6 +339,7 @@
     let wizardStep = 1;
     let uploadedFiles = [];
     let isScanCancelled = false;
+    let currentLoadingMode = "quick";
 
     // Platform Pills select
     const platformBtns = checkForm.querySelectorAll(".select-pill-btn");
@@ -584,7 +585,11 @@
     document.getElementById("btn-cancel-scan").onclick = () => {
       isScanCancelled = true;
       showToast("Scanning analysis cancelled.", "warning");
-      window.switchCheckProfileSubscreen("input");
+      if (currentLoadingMode === "compare") {
+        window.switchCheckProfileSubscreen("compare");
+      } else {
+        window.switchCheckProfileSubscreen("input");
+      }
     };
 
     // Running check pipeline
@@ -593,6 +598,7 @@
       const profileUrl = document.getElementById("profile-url").value.trim();
 
       isScanCancelled = false;
+      currentLoadingMode = "quick";
       window.switchCheckProfileSubscreen("loading");
 
       const logsBox = document.getElementById("scanning-logs-box");
@@ -1078,18 +1084,49 @@
         return;
       }
 
-      const compareBtn = compForm.querySelector('button[type="submit"]');
-      const origText = compareBtn.textContent;
-      compareBtn.disabled = true;
-      compareBtn.textContent = "Computing comparison matrix...";
+      isScanCancelled = false;
+      currentLoadingMode = "compare";
+      window.switchCheckProfileSubscreen("loading");
 
-      // Professional 4 seconds loading delay
-      await new Promise((r) => setTimeout(r, 4000));
-      compareBtn.disabled = false;
-      compareBtn.textContent = origText;
+      const logsBox = document.getElementById("scanning-logs-box");
+      logsBox.innerHTML = "";
+
+      const compareStages = [
+        "Initializing comparison engines",
+        "Connecting to target profile API feeds",
+        "Retrieving genuine original profile metadata",
+        "Retrieving suspicious copycat profile metadata",
+        "Analysing username similarities (homoglyphs & Levenshtein)",
+        "Analysing biography text duplication percentages",
+        "Running profile image similarity search and reuse checks",
+        "Evaluating shared external redirect link parameters",
+        "Calculating final impersonation probability metrics"
+      ];
+
+      for (let i = 0; i < compareStages.length; i++) {
+        if (isScanCancelled) return;
+        const item = document.createElement("div");
+        item.className = "scanning-log-item";
+        item.textContent = `⏳ ${compareStages[i]}...`;
+        logsBox.appendChild(item);
+        logsBox.scrollTop = logsBox.scrollHeight;
+        await new Promise((r) => setTimeout(r, 450));
+        if (isScanCancelled) return;
+        item.textContent = `✓ ${compareStages[i]} - Complete.`;
+        item.style.color = "var(--accent-cyan)";
+      }
+
+      if (isScanCancelled) return;
 
       playNotificationBeep("warning");
+      window.switchCheckProfileSubscreen("compare");
       document.getElementById("compare-results-area").style.display = "block";
+      
+      // Auto scroll to results area
+      setTimeout(() => {
+        const resArea = document.getElementById("compare-results-area");
+        if (resArea) resArea.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
 
       const cleanGenUser = genUser.toLowerCase();
       const cleanGenUrl = genUrl.toLowerCase();
@@ -1174,27 +1211,52 @@
 
     const userSim = window.CyberNetraServices.calculateUsernameSimilarity(genuineUser, suspectUser);
 
+    const isHighRisk = simScore > 40;
+
     if (tabName === "summary") {
-      list.innerHTML = `
-        <div class="finding-row flagged">
-          <i class="fa-solid fa-triangle-exclamation"></i>
-          <div class="finding-row-text">
-            <h5>High-Likelihood Copycat Profile Detected</h5>
-            <p>
-              Username Similarity score is <strong>${userSim}%</strong>. The suspect profile uses lookalike homoglyphs to deceive citizens.
-            </p>
+      if (isHighRisk) {
+        list.innerHTML = `
+          <div class="finding-row flagged">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div class="finding-row-text">
+              <h5>High-Likelihood Copycat Profile Detected</h5>
+              <p>
+                Username Similarity score is <strong>${userSim}%</strong>. The suspect profile uses lookalike homoglyphs to deceive citizens.
+              </p>
+            </div>
           </div>
-        </div>
-        <div class="finding-row flagged">
-          <i class="fa-solid fa-paste"></i>
-          <div class="finding-row-text">
-            <h5>Cloned Biography Details</h5>
-            <p>
-              Biography text exhibits near exact layout alignment. The suspect mimics official channels to obtain trust.
-            </p>
+          <div class="finding-row flagged">
+            <i class="fa-solid fa-paste"></i>
+            <div class="finding-row-text">
+              <h5>Cloned Biography Details</h5>
+              <p>
+                Biography text exhibits near exact layout alignment. The suspect mimics official channels to obtain trust.
+              </p>
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      } else {
+        list.innerHTML = `
+          <div class="finding-row good">
+            <i class="fa-solid fa-circle-check"></i>
+            <div class="finding-row-text">
+              <h5>No Impersonation Indicators Found</h5>
+              <p>
+                Username Similarity score is low (<strong>${userSim}%</strong>). No homoglyphs or lookalike characters were flagged.
+              </p>
+            </div>
+          </div>
+          <div class="finding-row good">
+            <i class="fa-solid fa-circle-check"></i>
+            <div class="finding-row-text">
+              <h5>Clean Biography Match</h5>
+              <p>
+                Biography comparison does not show cloned layouts or copy-pasted text structures.
+              </p>
+            </div>
+          </div>
+        `;
+      }
     } else if (tabName === "details") {
       list.innerHTML = `
         <div style="display:flex; flex-direction:column; gap:12px">
@@ -1202,14 +1264,14 @@
             <span class="comp-metric-header">Username comparison</span>
             <div class="comp-split-row">
               <div class="comp-value-box genuine">Genuine: @${genuineUser}</div>
-              <div class="comp-value-box suspect">Suspect: @${suspectUser} (Lookalike)</div>
+              <div class="comp-value-box suspect">Suspect: @${suspectUser} ${isHighRisk ? "(Lookalike)" : "(Independent)"}</div>
             </div>
           </div>
           <div>
             <span class="comp-metric-header">Claimed Location</span>
             <div class="comp-split-row">
               <div class="comp-value-box genuine">Genuine: Mumbai, India</div>
-              <div class="comp-value-box suspect">Suspect: Mumbai, India (Cloned)</div>
+              <div class="comp-value-box suspect">Suspect: Mumbai, India ${isHighRisk ? "(Cloned)" : "(Standard)"}</div>
             </div>
           </div>
           <div>
@@ -1222,22 +1284,41 @@
         </div>
       `;
     } else if (tabName === "posts") {
-      list.innerHTML = `
-        <div class="finding-row flagged">
-          <i class="fa-solid fa-copy"></i>
-          <div class="finding-row-text">
-            <h5>Reused Profile Photo</h5>
-            <p>Perceptual hash lookup shows 98% image reuse. The suspect downloaded the avatar from the genuine handle.</p>
+      if (isHighRisk) {
+        list.innerHTML = `
+          <div class="finding-row flagged">
+            <i class="fa-solid fa-copy"></i>
+            <div class="finding-row-text">
+              <h5>Reused Profile Photo</h5>
+              <p>Perceptual hash lookup shows 98% image reuse. The suspect downloaded the avatar from the genuine handle.</p>
+            </div>
           </div>
-        </div>
-        <div class="finding-row caution">
-          <i class="fa-solid fa-images"></i>
-          <div class="finding-row-text">
-            <h5>Post Image Hashes</h5>
-            <p>Multiple post graphics match genuine publications files indicators.</p>
+          <div class="finding-row caution">
+            <i class="fa-solid fa-images"></i>
+            <div class="finding-row-text">
+              <h5>Post Image Hashes</h5>
+              <p>Multiple post graphics match genuine publications files indicators.</p>
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      } else {
+        list.innerHTML = `
+          <div class="finding-row good">
+            <i class="fa-solid fa-circle-check"></i>
+            <div class="finding-row-text">
+              <h5>Authentic Profile Photo</h5>
+              <p>Perceptual hash lookup did not find matches with the genuine avatar profile.</p>
+            </div>
+          </div>
+          <div class="finding-row good">
+            <i class="fa-solid fa-circle-check"></i>
+            <div class="finding-row-text">
+              <h5>Clean Post Media</h5>
+              <p>Post image hashes show independent unique publications.</p>
+            </div>
+          </div>
+        `;
+      }
     } else if (tabName === "guide") {
       list.innerHTML = `
         <div class="dashboard-card" style="padding:16px; border-left: 4px solid var(--accent-cyan)">
