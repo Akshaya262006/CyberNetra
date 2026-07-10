@@ -228,7 +228,7 @@
   height: 36px;
   border-radius: 8px;
   cursor: pointer;
-  display: flex;
+  display: none; /* Hide on desktop */
   align-items: center;
   justify-content: center;
   transition: background var(--transition-fast);
@@ -1440,7 +1440,7 @@ textarea.form-control {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  width: 80px;
+  flex: 1;
 }
 
 .step-node-dot {
@@ -1840,6 +1840,10 @@ textarea.form-control {
   
   .top-header {
     padding: 0 16px;
+  }
+  
+  .menu-toggle-btn {
+    display: flex;
   }
   
   .global-search-bar {
