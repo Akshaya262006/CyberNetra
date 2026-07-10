@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 .gemini/
 *.log
+.env
+node_modules/

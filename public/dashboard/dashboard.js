@@ -1241,6 +1241,23 @@
 
         // Hide/Show dropzone descriptions
         document.getElementById("dropzone-desc-type").textContent = activeMediaType.toUpperCase();
+
+        const calloutText = document.getElementById("media-callout-text");
+        const formatsText = document.getElementById("media-formats-limit-text");
+
+        if (activeMediaType === "image") {
+          fileInput.accept = "image/png,image/jpeg,image/jpg,image/webp";
+          calloutText.innerHTML = "Drag and drop media here, or <strong>browse files</strong> to start evaluation.";
+          formatsText.textContent = "Supports PNG, JPG, JPEG, WEBP (Max 10MB)";
+        } else if (activeMediaType === "video") {
+          fileInput.accept = "video/mp4,video/quicktime,video/webm"; // MOV is video/quicktime
+          calloutText.innerHTML = "Drag and drop video here, or <strong>browse files</strong> to start evaluation.";
+          formatsText.textContent = "Supports MP4, MOV, WEBM (Max 50MB)";
+        } else if (activeMediaType === "audio") {
+          fileInput.accept = "audio/mpeg,audio/mp3,audio/wav,audio/x-wav,audio/m4a,audio/x-m4a,audio/aac,audio/ogg";
+          calloutText.innerHTML = "Upload a recorded call or voice sample for AI-voice analysis. Drag and drop audio here or <strong>browse files</strong>.";
+          formatsText.textContent = "Supports MP3, WAV, M4A, AAC, OGG (Max 20MB)";
+        }
       });
     });
 
@@ -1279,25 +1296,105 @@
 
   // Process file upload & call api
   async function processUploadedMedia(file, fileType) {
-    // Show spinner loader state on Dropzone
+    if (!file) {
+      showToast("No file selected for analysis.", "error");
+      return;
+    }
+
+    // Client-side file constraint checks
+    const ext = file.name.split('.').pop().toLowerCase();
+    const sizeMB = file.size / (1024 * 1024);
+
+    if (fileType === "image") {
+      const allowed = ["png", "jpg", "jpeg", "webp"];
+      if (!allowed.includes(ext)) {
+        showToast("Unsupported file type. Use PNG, JPG, JPEG, or WEBP.", "error");
+        return;
+      }
+      if (sizeMB > 10) {
+        showToast("Image file exceeds the 10 MB limit.", "error");
+        return;
+      }
+    } else if (fileType === "video") {
+      const allowed = ["mp4", "mov", "webm"];
+      if (!allowed.includes(ext)) {
+        showToast("Unsupported video type. Use MP4, MOV, or WEBM.", "error");
+        return;
+      }
+      if (sizeMB > 50) {
+        showToast("Video file exceeds the 50 MB limit.", "error");
+        return;
+      }
+    } else if (fileType === "audio") {
+      const allowed = ["mp3", "wav", "m4a", "aac", "ogg"];
+      if (!allowed.includes(ext)) {
+        showToast("Unsupported audio type. Use MP3, WAV, M4A, AAC, or OGG.", "error");
+        return;
+      }
+      if (sizeMB > 20) {
+        showToast("Audio file exceeds the 20 MB limit.", "error");
+        return;
+      }
+    }
+
+    // Disable input options and show loader
     const dropzone = document.getElementById("media-dropzone");
     const origHtml = dropzone.innerHTML;
+    
+    // Prevent clicking upload during processing
+    dropzone.style.pointerEvents = "none";
+
+    let loadingLabel = "Analysing media...";
+    if (fileType === "image") {
+      loadingLabel = "Analysing image...";
+    } else if (fileType === "video") {
+      loadingLabel = "Uploading video...";
+    } else if (fileType === "audio") {
+      loadingLabel = "Analysing voice sample...";
+    }
 
     dropzone.innerHTML = `
       <div class="scanning-radar-ring"></div>
-      <h4>Forensic Processing Active...</h4>
-      <p>Running neural network analysis stages on file ${file.name}</p>
+      <h4 id="media-loader-header">${loadingLabel}</h4>
+      <p id="media-loader-subtext">Forensic scan active for ${file.name}</p>
     `;
 
-    const response = await services.verifyMedia(file, fileType);
-    dropzone.innerHTML = origHtml; // restore UI
+    // Dynamic label changes for video analysis stages
+    let loaderInterval;
+    if (fileType === "video") {
+      let stage = 0;
+      loaderInterval = setInterval(() => {
+        stage++;
+        const header = document.getElementById("media-loader-header");
+        if (header) {
+          if (stage === 1) {
+            header.textContent = "Video analysis in progress...";
+          } else if (stage === 2) {
+            header.textContent = "Processing frames...";
+          }
+        }
+      }, 3500);
+    }
 
-    if (response.ok) {
-      activeMediaScanId = response.result.id;
-      playNotificationBeep(response.result.riskScore > 75 ? "error" : "success");
-      renderMediaResultScreen();
-    } else {
-      showToast("Media analysis failed.", "error");
+    try {
+      const response = await window.CyberNetraServices.verifyMedia(file, fileType);
+      if (loaderInterval) clearInterval(loaderInterval);
+      
+      dropzone.innerHTML = origHtml;
+      dropzone.style.pointerEvents = "auto";
+
+      if (response.ok) {
+        activeMediaScanId = response.result.id;
+        playNotificationBeep(response.result.riskScore > 74 ? "error" : "success");
+        renderMediaResultScreen();
+      } else {
+        showToast(response.message || "Media analysis failed.", "error");
+      }
+    } catch (err) {
+      if (loaderInterval) clearInterval(loaderInterval);
+      dropzone.innerHTML = origHtml;
+      dropzone.style.pointerEvents = "auto";
+      showToast("Server communication error. Verification aborted.", "error");
     }
   }
 

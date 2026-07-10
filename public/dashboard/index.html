@@ -875,14 +875,14 @@
                 <div class="upload-dropzone" id="media-dropzone">
                   <i class="fa-solid fa-file-arrow-up"></i>
                   <h4>Upload <span id="dropzone-desc-type">IMAGE</span> File</h4>
-                  <p>Drag and drop media here, or <strong>browse files</strong> to start evaluation.</p>
-                  <span style="font-size:11px; color:var(--text-muted)">Supports PNG, JPG, MP4, MP3, WAV (Max 25MB)</span>
-                  <input type="file" id="media-file-input" style="display: none;" accept="image/*,video/*,audio/*">
+                  <p id="media-callout-text">Drag and drop media here, or <strong>browse files</strong> to start evaluation.</p>
+                  <span id="media-formats-limit-text" style="font-size:11px; color:var(--text-muted)">Supports PNG, JPG, JPEG, WEBP (Max 10MB)</span>
+                  <input type="file" id="media-file-input" style="display: none;" accept="image/png,image/jpeg,image/jpg,image/webp">
                 </div>
               </div>
 
-              <div class="auth-warning" style="margin-bottom:0">
-                <i class="fa-solid fa-shield-halved"></i> Privacy Policy: Uploaded file indices are kept confidential. Content remains encrypted and is purged immediately after completing verification sequences.
+              <div class="auth-warning" style="margin-bottom:0; font-size:12px; line-height:1.5; color:var(--text-muted)">
+                <i class="fa-solid fa-shield-halved"></i> <strong>Privacy Notice:</strong> Uploaded media is used only for analysis and is not intentionally stored by CyberNetra after processing. Third-party detection services may process the file according to their own privacy policy.
               </div>
             </div>
 
@@ -1001,6 +1001,11 @@
                     <div class="audio-waveform-canvas" id="m-aud-waveform-points">
                       <!-- Wave bar spans injected -->
                     </div>
+                  </div>
+
+                  <!-- Disclaimer note -->
+                  <div class="auth-warning" style="margin-top:20px; font-size:12px; line-height:1.5; color:var(--text-muted)">
+                    <strong>Disclaimer:</strong> This automated assessment provides an estimated likelihood and does not constitute definitive proof that the media is authentic or AI-generated. Results may be affected by compression, editing, recording quality, file conversion, background noise, and newly released generation tools.
                   </div>
 
                 </div>
