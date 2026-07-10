@@ -98,16 +98,16 @@ app.post('/api/media/check-image', upload.single('media'), async (req, res) => {
   }
 
   // Mock rules:
-  // First image: Colorful AI painting of bird (320994 bytes) -> 93% risk
-  // Second image: Real photograph of young man in a black suit (89944 bytes) -> 3% risk
+  // First image: Colorful AI painting of bird (329731 bytes) -> 93% risk
+  // Second image: Real photograph of young man in a black suit (56261 bytes) -> 3% risk
   // Any other image -> 50% risk
   let targetProbability = 0.50; // fallback 50%
   const sizeBytes = req.file.buffer.length;
 
-  if (sizeBytes === 320994 || (sizeBytes >= 310000 && sizeBytes <= 330000)) {
+  if (sizeBytes === 329731 || (sizeBytes >= 310000 && sizeBytes <= 340000)) {
     targetProbability = 0.93;
     console.log("[Image API Mock System] Match found: First Image (AI Bird Painting). Risk score set to 93%.");
-  } else if (sizeBytes === 89944 || (sizeBytes >= 85000 && sizeBytes <= 95000)) {
+  } else if (sizeBytes === 56261 || (sizeBytes >= 50000 && sizeBytes <= 65000)) {
     targetProbability = 0.03;
     console.log("[Image API Mock System] Match found: Second Image (Real Photo of Man in Suit). Risk score set to 3%.");
   } else {
