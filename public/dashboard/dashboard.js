@@ -291,20 +291,54 @@
     }
   };
 
+  // Subscreen Router Utility for Check Profile Panel
+  window.switchCheckProfileSubscreen = function (screenName) {
+    const screens = [
+      "profile-landing-screen",
+      "profile-input-screen",
+      "profile-ocr-review",
+      "profile-loading-screen",
+      "profile-results-screen",
+      "profile-compare-screen"
+    ];
+    screens.forEach((scr) => {
+      const el = document.getElementById(scr);
+      if (el) el.style.display = "none";
+    });
+
+    let targetId = "";
+    if (screenName === "landing") targetId = "profile-landing-screen";
+    else if (screenName === "input") targetId = "profile-input-screen";
+    else if (screenName === "ocr-review") targetId = "profile-ocr-review";
+    else if (screenName === "loading") targetId = "profile-loading-screen";
+    else if (screenName === "results") targetId = "profile-results-screen";
+    else if (screenName === "compare") targetId = "profile-compare-screen";
+
+    const targetEl = document.getElementById(targetId);
+    if (targetEl) {
+      targetEl.style.display = "block";
+      // Reset input wizard step if entering input screen
+      if (screenName === "input" && window.resetProfileWizard) {
+        window.resetProfileWizard();
+      }
+      if (screenName === "compare" && window.resetCompareScreen) {
+        window.resetCompareScreen();
+      }
+    }
+  };
+
   // 2. CHECK PROFILE PROCESSOR
   function initCheckProfilePanel() {
     const checkForm = document.getElementById("profile-check-form");
     if (!checkForm) return;
 
-    // Reset view visibility
-    document.getElementById("profile-input-screen").style.display = "block";
-    document.getElementById("profile-loading-screen").style.display = "none";
-    document.getElementById("profile-results-screen").style.display = "none";
-    document.getElementById("profile-compare-screen").style.display = "none";
-
-    // Bind Platform buttons
-    const platformBtns = checkForm.querySelectorAll(".select-pill-btn");
     let selectedPlatform = "instagram";
+    let wizardStep = 1;
+    let uploadedFiles = [];
+    let isScanCancelled = false;
+
+    // Platform Pills select
+    const platformBtns = checkForm.querySelectorAll(".select-pill-btn");
     platformBtns.forEach((btn) => {
       btn.addEventListener("click", () => {
         platformBtns.forEach((b) => b.classList.remove("active"));
@@ -313,63 +347,287 @@
       });
     });
 
-    // Single click handler to trigger scan pipeline
-    checkForm.addEventListener("submit", async (e) => {
+    // Wizard Controls
+    const prevBtn = document.getElementById("wizard-profile-prev-btn");
+    const nextBtn = document.getElementById("wizard-profile-next-btn");
+
+    window.resetProfileWizard = function () {
+      wizardStep = 1;
+      uploadedFiles = [];
+      document.getElementById("quick-check-evidence-list").innerHTML = "";
+      checkForm.reset();
+      goToStep(1);
+    };
+
+    function goToStep(stepNum) {
+      wizardStep = stepNum;
+      checkForm.querySelectorAll(".wizard-profile-step-panel").forEach((panel) => {
+        panel.style.display = "none";
+      });
+      const activePanel = checkForm.querySelector(`.wizard-profile-step-panel[data-wizard-profile-step="${stepNum}"]`);
+      if (activePanel) activePanel.style.display = "block";
+
+      // Update Node classes
+      for (let i = 1; i <= 5; i++) {
+        const node = document.getElementById(`wizard-profile-step-node-${i}`);
+        if (node) {
+          node.classList.toggle("active", i <= stepNum);
+        }
+      }
+
+      // Buttons text
+      if (stepNum === 1) {
+        prevBtn.style.display = "none";
+        nextBtn.textContent = "Next Step";
+      } else {
+        prevBtn.style.display = "inline-flex";
+        if (stepNum === 5) {
+          nextBtn.textContent = "Analyse Profile";
+        } else {
+          nextBtn.textContent = "Next Step";
+        }
+      }
+    }
+
+    prevBtn.onclick = () => {
+      if (wizardStep > 1) {
+        goToStep(wizardStep - 1);
+      } else {
+        window.switchCheckProfileSubscreen("landing");
+      }
+    };
+
+    nextBtn.onclick = async () => {
+      if (wizardStep === 2) {
+        const url = document.getElementById("profile-url").value.trim();
+        const username = document.getElementById("profile-username").value.trim();
+        if (!url && !username) {
+          showToast("Please provide either a Profile URL or Username handle to scan.", "warning");
+          return;
+        }
+      }
+      if (wizardStep < 5) {
+        goToStep(wizardStep + 1);
+      } else {
+        // Trigger scanning sequence
+        executeProfileCheckPipeline();
+      }
+    };
+
+    // Drag and Drop Zone
+    const dropzone = document.getElementById("quick-check-dropzone");
+    const fileInput = document.getElementById("quick-check-file-input");
+    const evidenceList = document.getElementById("quick-check-evidence-list");
+
+    dropzone.onclick = () => fileInput.click();
+
+    dropzone.ondragover = (e) => {
       e.preventDefault();
+      dropzone.style.borderColor = "var(--accent)";
+      dropzone.style.background = "rgba(15, 127, 254, 0.08)";
+    };
+
+    dropzone.ondragleave = () => {
+      dropzone.style.borderColor = "rgba(15, 127, 254, 0.3)";
+      dropzone.style.background = "rgba(4, 9, 20, 0.5)";
+    };
+
+    dropzone.ondrop = (e) => {
+      e.preventDefault();
+      dropzone.style.borderColor = "rgba(15, 127, 254, 0.3)";
+      dropzone.style.background = "rgba(4, 9, 20, 0.5)";
+      if (e.dataTransfer.files.length > 0) {
+        handleFileUpload(e.dataTransfer.files[0]);
+      }
+    };
+
+    fileInput.onchange = () => {
+      if (fileInput.files.length > 0) {
+        handleFileUpload(fileInput.files[0]);
+      }
+    };
+
+    function handleFileUpload(file) {
+      const fileId = `file-${Date.now()}`;
+      uploadedFiles.push(file);
+
+      const card = document.createElement("div");
+      card.className = "evidence-upload-card";
+      card.id = fileId;
+      card.innerHTML = `
+        <div class="evidence-card-info">
+          <i class="fa-solid fa-file-image evidence-card-icon"></i>
+          <div class="evidence-card-text">
+            <div class="evidence-card-name">${file.name}</div>
+            <div class="evidence-card-size">${(file.size / 1024).toFixed(1)} KB</div>
+          </div>
+        </div>
+        <div class="evidence-card-actions">
+          <div class="progress-bar-tiny">
+            <div class="progress-bar-fill" id="progress-${fileId}"></div>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="btn-del-${fileId}"><i class="fa-solid fa-trash red"></i></button>
+        </div>
+      `;
+      evidenceList.appendChild(card);
+
+      card.querySelector(`#btn-del-${fileId}`).onclick = (e) => {
+        e.stopPropagation();
+        card.remove();
+        uploadedFiles = uploadedFiles.filter((f) => f !== file);
+      };
+
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 25;
+        const fill = document.getElementById(`progress-${fileId}`);
+        if (fill) fill.style.width = `${progress}%`;
+        if (progress >= 100) {
+          clearInterval(interval);
+          promptOcrExtraction(file);
+        }
+      }, 150);
+    }
+
+    function promptOcrExtraction(file) {
+      if (confirm(`Do you want to run Cyber Netra OCR extraction on: "${file.name}"?`)) {
+        runOcrExtraction(file);
+      }
+    }
+
+    async function runOcrExtraction(file) {
+      showToast("Running OCR text extraction...", "info");
+      const res = await window.CyberNetraServices.extractProfileDetailsFromScreenshot(file);
+      if (res.ok) {
+        showToast("OCR text extraction complete.", "success");
+        document.getElementById("ocr-username").value = res.data.username;
+        document.getElementById("ocr-display-name").value = res.data.displayName;
+        document.getElementById("ocr-followers").value = res.data.followers;
+        document.getElementById("ocr-following").value = res.data.following;
+        document.getElementById("ocr-posts").value = res.data.posts;
+        document.getElementById("ocr-website").value = res.data.externalWebsite;
+        document.getElementById("ocr-biography").value = res.data.biography;
+        document.getElementById("ocr-verified").checked = res.data.verified;
+
+        window.switchCheckProfileSubscreen("ocr-review");
+      }
+    }
+
+    // OCR Review form submit
+    const ocrForm = document.getElementById("ocr-review-form");
+    ocrForm.onsubmit = (e) => {
+      e.preventDefault();
+      // Apply OCR values back to wizard inputs
+      document.getElementById("profile-username").value = document.getElementById("ocr-username").value;
+      document.getElementById("profile-display-name").value = document.getElementById("ocr-display-name").value;
+      document.getElementById("profile-followers-input").value = document.getElementById("ocr-followers").value;
+      document.getElementById("profile-following-input").value = document.getElementById("ocr-following").value;
+      document.getElementById("profile-posts-input").value = document.getElementById("ocr-posts").value;
+      document.getElementById("profile-url").value = document.getElementById("ocr-website").value;
+      document.getElementById("profile-bio-input").value = document.getElementById("ocr-biography").value;
+      
+      showToast("OCR review details updated.", "success");
+      goToStep(4);
+      window.switchCheckProfileSubscreen("input");
+    };
+
+    document.getElementById("ocr-btn-cancel").onclick = () => {
+      window.switchCheckProfileSubscreen("input");
+      goToStep(3);
+    };
+
+    document.getElementById("ocr-btn-retry").onclick = () => {
+      if (uploadedFiles.length > 0) {
+        runOcrExtraction(uploadedFiles[uploadedFiles.length - 1]);
+      } else {
+        showToast("No screenshot file available for extraction.", "warning");
+      }
+    };
+
+    // Cancel scan button
+    document.getElementById("btn-cancel-scan").onclick = () => {
+      isScanCancelled = true;
+      showToast("Scanning analysis cancelled.", "warning");
+      window.switchCheckProfileSubscreen("input");
+    };
+
+    // Running check pipeline
+    async function executeProfileCheckPipeline() {
       const username = document.getElementById("profile-username").value.trim();
       const profileUrl = document.getElementById("profile-url").value.trim();
 
-      if (!username && !profileUrl) {
-        showToast("Enter a profile URL or username to scan.", "warning");
-        return;
-      }
+      isScanCancelled = false;
+      window.switchCheckProfileSubscreen("loading");
 
-      // Enter loading state
-      document.getElementById("profile-input-screen").style.display = "none";
-      document.getElementById("profile-loading-screen").style.display = "block";
-
-      // Scan logs loop
       const logsBox = document.getElementById("scanning-logs-box");
       logsBox.innerHTML = "";
+
       const scanStages = [
-        "Reading profile details",
+        "Validating profile information",
+        "Reading screenshot details",
+        "Analysing basic account signals",
         "Analysing behaviour",
-        "Checking identity consistency",
+        "Comparing username and biography",
+        "Checking content similarity",
         "Searching for image reuse",
-        "Checking AI-media indicators",
-        "Preparing risk score"
+        "Analysing external links",
+        "Checking previous Cyber Netra reports",
+        "Calculating the explainable risk score",
+        "Preparing the evidence summary"
       ];
 
       for (let i = 0; i < scanStages.length; i++) {
+        if (isScanCancelled) return;
         const item = document.createElement("div");
         item.className = "scanning-log-item";
         item.textContent = `⏳ ${scanStages[i]}...`;
         logsBox.appendChild(item);
         logsBox.scrollTop = logsBox.scrollHeight;
-        await new Promise((r) => setTimeout(r, 450));
+        await new Promise((r) => setTimeout(r, 220));
+        if (isScanCancelled) return;
         item.textContent = `✓ ${scanStages[i]} - Complete.`;
         item.style.color = "var(--accent-cyan)";
       }
 
-      // Call Mock API
-      const response = await services.analyseProfile(selectedPlatform, username || "analysed_profile", profileUrl);
+      if (isScanCancelled) return;
+
+      // Extract form details to feed to service calculation
+      const optionalData = {
+        recentAccount: document.getElementById("obs-recent-account").checked,
+        suspiciousRatio: document.getElementById("obs-suspicious-ratio").checked,
+        repeatedPosting: document.getElementById("obs-repeated-posting").checked,
+        biographyCopied: document.getElementById("obs-biography-copied").checked,
+        postsCopied: document.getElementById("obs-posts-copied").checked,
+        suspiciousLink: document.getElementById("obs-suspicious-link").checked
+      };
+
+      const fileObj = uploadedFiles.length > 0 ? uploadedFiles[0] : null;
+
+      const response = await window.CyberNetraServices.analyseProfile(
+        selectedPlatform,
+        username || "analysed_profile",
+        profileUrl,
+        fileObj,
+        optionalData
+      );
+
       if (response.ok) {
         activeProfileScanId = response.result.id;
-        playNotificationBeep(response.result.riskScore > 75 ? "error" : "success");
+        playNotificationBeep(response.result.riskScore > 50 ? "error" : "success");
         renderProfileResultScreen();
       } else {
-        showToast("Unable to complete profile scan. Retry.", "error");
-        document.getElementById("profile-input-screen").style.display = "block";
-        document.getElementById("profile-loading-screen").style.display = "none";
+        showToast("Error executing scan.", "error");
+        window.switchCheckProfileSubscreen("input");
       }
-    });
+    }
+    
+    // Default to show landing page subview
+    window.switchCheckProfileSubscreen("landing");
   }
 
   // RENDER DETAILED SCAN RESULTS SCREEN
   async function renderProfileResultScreen() {
-    document.getElementById("profile-input-screen").style.display = "none";
-    document.getElementById("profile-loading-screen").style.display = "none";
-    document.getElementById("profile-results-screen").style.display = "block";
+    window.switchCheckProfileSubscreen("results");
 
     const scans = window.CyberNetraMockData.profileScans;
     const scan = scans.find((s) => s.id === activeProfileScanId);
@@ -383,11 +641,10 @@
     // Risk Meter Ring progress
     const progressRing = document.getElementById("res-risk-circle");
     const riskScore = scan.riskScore;
-    const circumference = 251.2; // 2 * PI * r (40)
+    const circumference = 251.2;
     const offset = circumference - (circumference * riskScore) / 100;
     progressRing.style.strokeDashoffset = offset;
 
-    // Set ring colors based on index metrics
     let badgeClass = "badge-green";
     let scoreColor = "#39d98a";
     if (riskScore > 75) {
@@ -403,16 +660,17 @@
     progressRing.style.stroke = scoreColor;
 
     document.getElementById("res-risk-percent").textContent = `${riskScore}%`;
+    document.getElementById("res-risk-percent").style.color = scoreColor;
     document.getElementById("res-risk-class").className = `badge ${badgeClass}`;
     document.getElementById("res-risk-class").textContent = scan.riskClass.toUpperCase();
     document.getElementById("res-recommendation").textContent = scan.action;
 
-    // Render tabs: default show Behaviour Analysis
-    renderProfileTab(scan, "behavior");
+    // Default overview tab
+    renderProfileTab(scan, "overview");
 
     const tabs = document.querySelectorAll(".profile-res-tab-btn");
     tabs.forEach((tab) => {
-      tab.classList.toggle("active", tab.dataset.tabName === "behavior");
+      tab.classList.toggle("active", tab.dataset.tabName === "overview");
       tab.onclick = () => {
         tabs.forEach((t) => t.classList.remove("active"));
         tab.classList.add("active");
@@ -422,46 +680,46 @@
 
     // Control actions
     document.getElementById("res-action-save").onclick = () => {
-      showToast("Scan report saved to Saved & Watchlist successfully.", "success");
+      showToast("Scan report saved to profile logs.", "success");
     };
     document.getElementById("res-action-watchlist").onclick = () => {
-      // Add to watchlist mock
       const watchlist = window.CyberNetraMockData.watchlist;
-      const already = watchlist.find((w) => w.username === scan.username);
+      const already = watchlist.find((w) => w.username.toLowerCase() === scan.username.toLowerCase());
       if (!already) {
         watchlist.push({
           id: `WL-${Math.floor(Math.random() * 900) + 100}`,
           platform: scan.platform,
           username: scan.username,
-          url: `https://${scan.platform}.com/${scan.username}`,
+          url: scan.externalWebsite || `https://${scan.platform}.com/${scan.username}`,
           prevScore: scan.riskScore,
           currScore: scan.riskScore,
           lastChecked: scan.date,
-          statusChange: "Added to active watchlist."
+          statusChange: "Added from scan results page."
         });
+        showToast(`@${scan.username} added to monitored watchlist.`, "success");
+      } else {
+        showToast(`@${scan.username} is already on monitored watchlist.`, "info");
       }
-      showToast(`@${scan.username} added to watchlist successfully.`, "success");
     };
     document.getElementById("res-action-download").onclick = () => {
-      showToast("Forensic evidence report PDF generated and downloaded.", "success");
+      triggerPDFReportDownload(scan);
     };
     document.getElementById("res-action-compare").onclick = () => {
       openCompareScreen(scan);
     };
     document.getElementById("res-action-report").onclick = () => {
       switchTab("my-reports");
-      // Pre-fill creation flow steps
       document.getElementById("incident-suspect-username").value = scan.username;
-      document.getElementById("incident-suspect-url").value = `https://${scan.platform}.com/${scan.username}`;
+      document.getElementById("incident-suspect-url").value = scan.externalWebsite || `https://${scan.platform}.com/${scan.username}`;
     };
     document.getElementById("res-action-flag-incorrect").onclick = () => {
-      showToast("Incorrect result logged. Specialists will review this profile score.", "info");
+      showToast("Incident report created. Verification team will review this score classification.", "info");
     };
     document.getElementById("res-action-delete").onclick = async () => {
-      if (confirm("Delete this scan result permanently?")) {
-        await services.deleteAnalysis(scan.id, "profile");
-        showToast("Analysis report deleted.", "warning");
-        switchTab("check-profile");
+      if (confirm("Permanently delete this check result?")) {
+        await window.CyberNetraServices.deleteAnalysis(scan.id, "profile");
+        showToast("Analysis deleted.", "warning");
+        window.switchCheckProfileSubscreen("landing");
       }
     };
   }
@@ -470,10 +728,53 @@
   function renderProfileTab(scan, tabName) {
     const list = document.getElementById("res-findings-list");
     if (!list) return;
-
     list.innerHTML = "";
 
-    if (tabName === "behavior") {
+    if (tabName === "overview") {
+      list.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:16px">
+          <div class="dashboard-card" style="padding:16px; background:rgba(255,255,255,0.01)">
+            <h4 style="color:#fff; margin:0 0 14px">Risk Metric Breakdown</h4>
+            <div class="dashboard-grid" style="grid-template-columns: repeat(5, 1fr); gap:10px; text-align:center">
+              <div style="background:rgba(255,255,255,0.02); padding:10px; border-radius:6px">
+                <span style="font-size:10px; color:var(--text-muted); display:block; margin-bottom:4px">BEHAVIOUR</span>
+                <strong style="font-size:16px; color:#fff">${scan.riskScore > 25 ? Math.min(25, Math.floor(scan.riskScore * 0.25)) : 0}/25</strong>
+              </div>
+              <div style="background:rgba(255,255,255,0.02); padding:10px; border-radius:6px">
+                <span style="font-size:10px; color:var(--text-muted); display:block; margin-bottom:4px">IDENTITY</span>
+                <strong style="font-size:16px; color:#fff">${scan.riskScore > 40 ? Math.min(25, Math.floor(scan.riskScore * 0.3)) : 0}/25</strong>
+              </div>
+              <div style="background:rgba(255,255,255,0.02); padding:10px; border-radius:6px">
+                <span style="font-size:10px; color:var(--text-muted); display:block; margin-bottom:4px">IMAGE REUSE</span>
+                <strong style="font-size:16px; color:#fff">${scan.imageAuthenticity.matchesFound > 0 ? 15 : 0}/25</strong>
+              </div>
+              <div style="background:rgba(255,255,255,0.02); padding:10px; border-radius:6px">
+                <span style="font-size:10px; color:var(--text-muted); display:block; margin-bottom:4px">CONTENT</span>
+                <strong style="font-size:16px; color:#fff">${scan.riskScore > 50 ? Math.min(15, Math.floor(scan.riskScore * 0.15)) : 0}/15</strong>
+              </div>
+              <div style="background:rgba(255,255,255,0.02); padding:10px; border-radius:6px">
+                <span style="font-size:10px; color:var(--text-muted); display:block; margin-bottom:4px">LINKS</span>
+                <strong style="font-size:16px; color:#fff">${scan.consistency.linksSuspicious ? 5 : 0}/10</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-card" style="padding:16px">
+            <h4 style="color:#fff; margin:0 0 10px">Reasons Flagged</h4>
+            <ul style="margin:0; padding-left:20px; font-size:13px; color:var(--accent-soft); line-height:1.6">
+              ${scan.reasons.map(r => `<li>${r}</li>`).join("")}
+            </ul>
+          </div>
+
+          <div class="dashboard-card" style="padding:16px; border-left: 4px solid var(--accent-green)">
+            <h4 style="color:#fff; margin:0 0 10px"><i class="fa-solid fa-circle-check green"></i> Positive Integrity Indicators</h4>
+            <p style="margin:0; font-size:13px; color:var(--text-muted)">
+              ${scan.riskScore < 30 ? "Profile exhibits consistent posting history, zero image reuse flags, and links to verified domains." : "Few positive indicators found. Stated profile fields contain inconsistencies."}
+            </p>
+          </div>
+        </div>
+      `;
+    } else if (tabName === "behavior") {
       const b = scan.behavior;
       list.innerHTML = `
         <div class="finding-row ${b.unusualPosting ? "flagged" : "good"}">
@@ -501,7 +802,7 @@
           <i class="fa-solid ${b.recentAccount ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
           <div class="finding-row-text">
             <h5>Recently Created Account</h5>
-            <p>${b.recentAccount ? "High risk. Account created within the last 15 days, a common pattern for scam handles." : "Safe. Mature profile lifespan verified."}</p>
+            <p>${b.recentAccount ? "High risk. Account created recently, a common pattern for scam handles." : "Safe. Mature profile lifespan verified."}</p>
           </div>
         </div>
         <div class="finding-row ${b.suspiciousRatio ? "flagged" : "good"}">
@@ -509,13 +810,6 @@
           <div class="finding-row-text">
             <h5>Suspicious Follower/Following Ratio</h5>
             <p>${b.suspiciousRatio ? "Flagged. Profile follows a large volume of users but has very few return followers." : "Safe. Normal friend follower ratio."}</p>
-          </div>
-        </div>
-        <div class="finding-row ${b.lowEngagement ? "flagged" : "good"}">
-          <i class="fa-solid ${b.lowEngagement ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
-          <div class="finding-row-text">
-            <h5>Low Engagement Compared with Follower Count</h5>
-            <p>${b.lowEngagement ? "Caution. Account follower count is high but post likes/comments are near zero." : "Safe. Regular user interactions verified."}</p>
           </div>
         </div>
         <div class="finding-row ${b.automatedActions ? "flagged" : "good"}">
@@ -547,7 +841,7 @@
           <i class="fa-solid ${c.copiedBio ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
           <div class="finding-row-text">
             <h5>Copied Biography</h5>
-            <p>${c.copiedBio ? "High risk. Text matches bio templates of existing public figures or business sites." : "Safe. Biography is unique."}</p>
+            <p>${c.copiedBio ? "High risk. Text matches bio templates of verified public figures or businesses." : "Safe. Biography is unique."}</p>
           </div>
         </div>
         <div class="finding-row ${c.similarAccounts ? "flagged" : "good"}">
@@ -571,27 +865,6 @@
             <p>${c.locationInconsistent ? "Flagged. Account registration country does not align with targeted local posts." : "Safe. Local region coordinates verified."}</p>
           </div>
         </div>
-        <div class="finding-row ${c.identityMismatch ? "flagged" : "good"}">
-          <i class="fa-solid ${c.identityMismatch ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
-          <div class="finding-row-text">
-            <h5>Identity Mismatch</h5>
-            <p>${c.identityMismatch ? "Caution. Stated name does not match email handle prefixes or link details." : "Safe. Account identity markers match."}</p>
-          </div>
-        </div>
-        <div class="finding-row ${c.duplicateIndicators ? "flagged" : "good"}">
-          <i class="fa-solid ${c.duplicateIndicators ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
-          <div class="finding-row-text">
-            <h5>Possible Impersonation</h5>
-            <p>${c.duplicateIndicators ? "Flagged. Account exhibits coordinates to copycat existing citizen contacts." : "Safe. Original identity."}</p>
-          </div>
-        </div>
-        <div class="finding-row ${c.linksSuspicious ? "flagged" : "good"}">
-          <i class="fa-solid ${c.linksSuspicious ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
-          <div class="finding-row-text">
-            <h5>Links to Suspicious Websites</h5>
-            <p>${c.linksSuspicious ? "Flagged. Bio link redirects to blacklisted domain lists or phishing portals." : "Safe. Links direct to safe portals."}</p>
-          </div>
-        </div>
       `;
     } else if (tabName === "images") {
       const img = scan.imageAuthenticity;
@@ -610,64 +883,108 @@
             <p>${img.croppedVersions ? "Flagged. Reused image exhibits cropping, rotation, and filter alteration flags." : "No editing marks detected on profile image."}</p>
           </div>
         </div>
-        <div class="finding-row ${img.matchesFound > 0 ? "flagged" : "good"}">
-          <i class="fa-solid fa-globe"></i>
+        
+        <div class="dashboard-card" style="padding: 16px; margin-top: 10px">
+          <h5 style="color:#fff; margin:0 0 10px">Image Modifications Testing Matrix</h5>
+          <table class="compare-matrix-table" style="margin:0; font-size:12px">
+            <thead>
+              <tr>
+                <th>Test Parameter</th>
+                <th>Result Status</th>
+                <th>Confidence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Exact Match Search</td>
+                <td>${img.matchesFound > 0 ? "⚠️ MATCH DETECTED" : "✓ Unique"}</td>
+                <td>High (99%)</td>
+              </tr>
+              <tr>
+                <td>Resized / Scaled Copy</td>
+                <td>${img.matchesFound > 0 ? "⚠️ MATCH DETECTED" : "✓ Unique"}</td>
+                <td>High (97%)</td>
+              </tr>
+              <tr>
+                <td>Cropped Avatar Test</td>
+                <td>${img.croppedVersions ? "⚠️ MATCH DETECTED" : "✓ Unique"}</td>
+                <td>Medium (84%)</td>
+              </tr>
+              <tr>
+                <td>Brightness / Contrast Adjust</td>
+                <td>${img.matchesFound > 0 ? "⚠️ MATCH DETECTED" : "✓ Unique"}</td>
+                <td>High (91%)</td>
+              </tr>
+              <tr>
+                <td>Border Overlay Analysis</td>
+                <td>${img.matchesFound > 0 ? "⚠️ MATCH DETECTED" : "✓ Unique"}</td>
+                <td>Medium (78%)</td>
+              </tr>
+              <tr>
+                <td>Watermark Transparency Test</td>
+                <td>${img.matchesFound > 0 ? "⚠️ MATCH DETECTED" : "✓ Unique"}</td>
+                <td>Low (62%)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+    } else if (tabName === "content") {
+      const isCopycat = scan.username.toLowerCase().includes("ananya_officia");
+      list.innerHTML = `
+        <div class="finding-row ${isCopycat ? "flagged" : "good"}">
+          <i class="fa-solid fa-file-signature"></i>
           <div class="finding-row-text">
-            <h5>Possible Original Image Source</h5>
-            <p>${img.matchesFound > 0 ? `Match detected: <a href="#" class="btn-ghost" style="text-decoration:underline">${img.originalSource}</a>` : "No matches in public stock directories."}</p>
+            <h5>Post Captions Similarity</h5>
+            <p>${isCopycat ? "⚠️ 96% text duplication detected compared to verified handle @ananya_official. Captions are copied." : "No duplicate post caption content clusters detected."}</p>
           </div>
         </div>
-        <div class="finding-row ${img.matchesFound > 0 ? "flagged" : "good"}">
-          <i class="fa-solid fa-circle-nodes"></i>
+        <div class="finding-row ${isCopycat ? "flagged" : "good"}">
+          <i class="fa-solid fa-hashtag"></i>
           <div class="finding-row-text">
-            <h5>Number of Image Matches</h5>
-            <p>Reverse lookup search matches found: <strong>${img.matchesFound} matches</strong>.</p>
-          </div>
-        </div>
-        <div class="finding-row ${img.matchesFound > 0 ? "flagged" : "good"}">
-          <i class="fa-solid fa-clock-rotate-left"></i>
-          <div class="finding-row-text">
-            <h5>Image Reuse Timeline</h5>
-            <p>${img.matchesFound > 0 ? img.reuseTimeline : "No historical image reuse detected."}</p>
+            <h5>Hashtag Patterns</h5>
+            <p>${isCopycat ? "⚠️ Duplicate hashtag blocks shared in identical sequential order." : "Hashtag sequences exhibit organic variety."}</p>
           </div>
         </div>
       `;
-    } else if (tabName === "ai") {
-      const ai = scan.aiMedia;
+    } else if (tabName === "links") {
+      const linkAnalyse = window.CyberNetraServices.analyseExternalLink(scan.externalWebsite);
       list.innerHTML = `
-        <div class="finding-row ${ai.aiGeneratedProb > 50 ? "flagged" : "good"}">
-          <i class="fa-solid fa-brain"></i>
+        <div class="finding-row ${linkAnalyse.flagged ? "flagged" : "good"}">
+          <i class="fa-solid fa-earth-americas"></i>
           <div class="finding-row-text">
-            <h5>AI-Generated Probability</h5>
-            <p>Score: <strong>${ai.aiGeneratedProb}%</strong>. Evaluated chance of synthetic GAN face generation.</p>
+            <h5>External Link Safety Check</h5>
+            <p>
+              Link URL: <code>${scan.externalWebsite || "None"}</code><br>
+              Status: <strong>${linkAnalyse.flagged ? `⚠️ Blacklisted/Suspicious (${linkAnalyse.category.toUpperCase()})` : "✓ Secure / Safe Link"}</strong>
+            </p>
           </div>
         </div>
-        <div class="finding-row ${ai.faceManipProb > 50 ? "flagged" : "good"}">
-          <i class="fa-solid fa-mask"></i>
+        <div class="finding-row ${scan.externalWebsite && !scan.externalWebsite.startsWith("https://") ? "flagged" : "good"}">
+          <i class="fa-solid fa-lock"></i>
           <div class="finding-row-text">
-            <h5>Face Manipulation Probability</h5>
-            <p>Score: <strong>${ai.faceManipProb}%</strong>. Boundary pixel irregularities check.</p>
+            <h5>HTTPS Security Protocol</h5>
+            <p>${scan.externalWebsite && !scan.externalWebsite.startsWith("https://") ? "⚠️ Domain uses unencrypted HTTP protocol." : "✓ Secure SSL/TLS layer detected."}</p>
           </div>
         </div>
-        <div class="finding-row good">
-          <i class="fa-solid fa-clapperboard"></i>
-          <div class="finding-row-text">
-            <h5>Deepfake Probability</h5>
-            <p>Score: <strong>0%</strong>. No face-swap video components detected (Static Avatar profile image only).</p>
-          </div>
-        </div>
-        <div class="finding-row ${ai.editIndicators ? "flagged" : "good"}">
-          <i class="fa-solid fa-wand-magic-sparkles"></i>
-          <div class="finding-row-text">
-            <h5>Editing Indicators</h5>
-            <p>${ai.editIndicators ? "Caution. High rating of local blurring or pixel cloning edits." : "No photo editing indicator marks found."}</p>
-          </div>
-        </div>
-        <div class="finding-row good">
-          <i class="fa-solid fa-shield-halved"></i>
-          <div class="finding-row-text">
-            <h5>Confidence Level</h5>
-            <p>Confidence index: <strong>${ai.confidence}</strong>.</p>
+      `;
+    } else if (tabName === "evidence") {
+      list.innerHTML = `
+        <div class="dashboard-card" style="padding:16px">
+          <h4 style="color:#fff; margin:0 0 14px">Evidence Record Artifacts</h4>
+          <div style="display:flex; flex-direction:column; gap:10px">
+            <div class="evidence-upload-card" style="border-style: solid">
+              <div class="evidence-card-info">
+                <i class="fa-solid fa-file-shield evidence-card-icon"></i>
+                <div class="evidence-card-text">
+                  <div class="evidence-card-name">analysis_report_${scan.id}.pdf</div>
+                  <div class="evidence-card-size">Calculated verification checksum: SHA-256 (6a02b...d38e)</div>
+                </div>
+              </div>
+            </div>
+            <p style="margin:0; font-size:12px; color:var(--text-muted)">
+              Analysis record code: <code>CN-${scan.id}-${scan.date.replace(/[- :]/g, "")}</code>
+            </p>
           </div>
         </div>
       `;
@@ -676,63 +993,228 @@
 
   // 3. PROFILE COMPARISON WIZARD
   function openCompareScreen(baseScan) {
-    document.getElementById("profile-results-screen").style.display = "none";
-    document.getElementById("profile-compare-screen").style.display = "block";
+    window.switchCheckProfileSubscreen("compare");
 
-    const genuineInput = document.getElementById("comp-genuine-url");
-    const suspectInput = document.getElementById("comp-suspect-url");
+    const genUsernameInput = document.getElementById("comp-genuine-username");
+    const genUrlInput = document.getElementById("comp-genuine-url");
+    const genBioInput = document.getElementById("comp-genuine-bio");
 
-    // Reset layout
-    genuineInput.value = "";
-    suspectInput.value = baseScan ? `https://${baseScan.platform}.com/${baseScan.username}` : "";
-    document.getElementById("compare-results-area").style.display = "none";
+    const susUsernameInput = document.getElementById("comp-suspect-username");
+    const susUrlInput = document.getElementById("comp-suspect-url");
+    const susBioInput = document.getElementById("comp-suspect-bio");
+
+    window.resetCompareScreen = function () {
+      genUsernameInput.value = "ananya_official";
+      genUrlInput.value = "https://instagram.com/ananya_official";
+      genBioInput.value = "Verified Financial Consultant | MBA Finance | Helping citizens build secure wealth portfolios. Business enquiries: contact@ananyasharma.in";
+
+      susUsernameInput.value = baseScan ? baseScan.username : "ananya_officia1";
+      susUrlInput.value = baseScan ? baseScan.externalWebsite || `https://${baseScan.platform}.com/${baseScan.username}` : "https://ananyasharma-secure-pay.in";
+      susBioInput.value = baseScan ? baseScan.biography : "Verified Financial Consultant | MBA Finance | Helping citizens build secure wealth portfolios. Business enquiries: contact@ananyasharma.in";
+      
+      document.getElementById("compare-results-area").style.display = "none";
+    };
+
+    window.resetCompareScreen();
 
     const compForm = document.getElementById("profile-comparison-form");
     compForm.onsubmit = async (e) => {
       e.preventDefault();
-      const genuine = genuineInput.value.trim();
-      const suspect = suspectInput.value.trim();
+      
+      const genUser = genUsernameInput.value.trim();
+      const susUser = susUsernameInput.value.trim();
 
-      if (!genuine || !suspect) {
-        showToast("Enter both profile URLs to execute analysis.", "warning");
-        return;
-      }
-
-      // Loader
       const compareBtn = compForm.querySelector('button[type="submit"]');
       const origText = compareBtn.textContent;
       compareBtn.disabled = true;
-      compareBtn.textContent = "Computing similarity metrics...";
+      compareBtn.textContent = "Computing comparison matrix...";
 
-      const response = await services.compareProfiles(genuine, suspect);
+      await new Promise((r) => setTimeout(r, 1400));
       compareBtn.disabled = false;
       compareBtn.textContent = origText;
 
-      if (response.ok) {
-        playNotificationBeep();
-        document.getElementById("compare-results-area").style.display = "block";
-        const result = response.result;
+      playNotificationBeep("warning");
+      document.getElementById("compare-results-area").style.display = "block";
 
-        // Render Similarity Score
-        const simScoreEl = document.getElementById("comp-similarity-score");
-        simScoreEl.textContent = `${result.similarityScore}%`;
-        simScoreEl.className = result.similarityScore > 60 ? "red" : "orange";
-
-        // Bind comparison rows
-        document.getElementById("comp-row-username").textContent = result.usernameSimilarity;
-        document.getElementById("comp-row-photo").textContent = result.photoSimilarity;
-        document.getElementById("comp-row-bio").textContent = result.bioSimilarity;
-        document.getElementById("comp-row-post").textContent = result.postSimilarity;
-        document.getElementById("comp-row-followers").textContent = result.followerDifferences;
-        document.getElementById("comp-row-creation").textContent = result.creationDifferences;
-        document.getElementById("comp-row-badge").textContent = result.verificationStatus;
-        document.getElementById("comp-row-indicator").textContent = result.duplicateContentIndicators;
-
-        document.getElementById("res-action-compare-save").onclick = () => {
-          showToast("Comparison report saved.", "success");
-        };
+      // Compute actual comparison similarity score
+      const userSim = window.CyberNetraServices.calculateUsernameSimilarity(genUser, susUser);
+      const bioSim = window.CyberNetraServices.calculateTextSimilarity(genBioInput.value, susBioInput.value);
+      
+      // Weight calculations
+      const totalSim = Math.max(userSim, bioSim);
+      
+      document.getElementById("comp-similarity-score").textContent = `${totalSim}%`;
+      const badge = document.getElementById("comp-risk-badge");
+      if (totalSim > 75) {
+        badge.className = "badge badge-red";
+        badge.textContent = "CRITICAL IMPERSONATION RISK";
+        document.getElementById("comp-similarity-score").style.color = "var(--accent-red)";
+      } else if (totalSim > 40) {
+        badge.className = "badge badge-orange";
+        badge.textContent = "SUSPICIOUS IMPERSONATION ALERT";
+        document.getElementById("comp-similarity-score").style.color = "var(--accent-orange)";
+      } else {
+        badge.className = "badge badge-green";
+        badge.textContent = "LOW SIMILARITY / NO MISUSE DETECTED";
+        document.getElementById("comp-similarity-score").style.color = "var(--accent-green)";
       }
+
+      // Render Comparison Tab
+      renderComparisonTab(genUser, susUser, totalSim, "summary");
+
+      const compTabs = document.querySelectorAll(".comp-tab-btn");
+      compTabs.forEach((tab) => {
+        tab.classList.toggle("active", tab.dataset.compTab === "summary");
+        tab.onclick = () => {
+          compTabs.forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+          renderComparisonTab(genUser, susUser, totalSim, tab.dataset.compTab);
+        };
+      });
+
+      // Bind Save Comparison Actions
+      document.getElementById("comp-action-save").onclick = () => {
+        showToast("Comparison report saved successfully.", "success");
+      };
+      document.getElementById("comp-action-download").onclick = () => {
+        showToast("PDF comparison report downloaded successfully.", "success");
+      };
+      document.getElementById("comp-action-watchlist").onclick = () => {
+        showToast(`@${susUser} added to monitored watchlist.`, "success");
+      };
+      document.getElementById("comp-action-report").onclick = () => {
+        switchTab("my-reports");
+        document.getElementById("incident-suspect-username").value = susUser;
+        document.getElementById("incident-suspect-url").value = susUrlInput.value;
+      };
+      document.getElementById("comp-action-delete").onclick = () => {
+        showToast("Comparison log deleted.", "warning");
+        window.switchCheckProfileSubscreen("landing");
+      };
     };
+  }
+
+  // RENDER IMPERSONATION COMPARISON DETAILS TABS
+  function renderComparisonTab(genuineUser, suspectUser, simScore, tabName) {
+    const list = document.getElementById("comp-tab-content-area");
+    if (!list) return;
+    list.innerHTML = "";
+
+    const userSim = window.CyberNetraServices.calculateUsernameSimilarity(genuineUser, suspectUser);
+
+    if (tabName === "summary") {
+      list.innerHTML = `
+        <div class="finding-row flagged">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <div class="finding-row-text">
+            <h5>High-Likelihood Copycat Profile Detected</h5>
+            <p>
+              Username Similarity score is <strong>${userSim}%</strong>. The suspect profile uses lookalike homoglyphs to deceive citizens.
+            </p>
+          </div>
+        </div>
+        <div class="finding-row flagged">
+          <i class="fa-solid fa-paste"></i>
+          <div class="finding-row-text">
+            <h5>Cloned Biography Details</h5>
+            <p>
+              Biography text exhibits near exact layout alignment. The suspect mimics official channels to obtain trust.
+            </p>
+          </div>
+        </div>
+      `;
+    } else if (tabName === "details") {
+      list.innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:12px">
+          <div>
+            <span class="comp-metric-header">Username comparison</span>
+            <div class="comp-split-row">
+              <div class="comp-value-box genuine">Genuine: @${genuineUser}</div>
+              <div class="comp-value-box suspect">Suspect: @${suspectUser} (Lookalike)</div>
+            </div>
+          </div>
+          <div>
+            <span class="comp-metric-header">Claimed Location</span>
+            <div class="comp-split-row">
+              <div class="comp-value-box genuine">Genuine: Mumbai, India</div>
+              <div class="comp-value-box suspect">Suspect: Mumbai, India (Cloned)</div>
+            </div>
+          </div>
+          <div>
+            <span class="comp-metric-header">Verification Badges</span>
+            <div class="comp-split-row">
+              <div class="comp-value-box genuine">Genuine: VERIFIED (Blue badge)</div>
+              <div class="comp-value-box suspect">Suspect: UNVERIFIED</div>
+            </div>
+          </div>
+        </div>
+      `;
+    } else if (tabName === "posts") {
+      list.innerHTML = `
+        <div class="finding-row flagged">
+          <i class="fa-solid fa-copy"></i>
+          <div class="finding-row-text">
+            <h5>Reused Profile Photo</h5>
+            <p>Perceptual hash lookup shows 98% image reuse. The suspect downloaded the avatar from the genuine handle.</p>
+          </div>
+        </div>
+        <div class="finding-row caution">
+          <i class="fa-solid fa-images"></i>
+          <div class="finding-row-text">
+            <h5>Post Image Hashes</h5>
+            <p>Multiple post graphics match genuine publications files indicators.</p>
+          </div>
+        </div>
+      `;
+    } else if (tabName === "guide") {
+      list.innerHTML = `
+        <div class="dashboard-card" style="padding:16px; border-left: 4px solid var(--accent-cyan)">
+          <h4 style="color:#fff; margin:0 0 10px">Steps to Report Impersonation on Social Media</h4>
+          <ol style="margin:0; padding-left:20px; font-size:13px; color:var(--accent-soft); line-height:1.6">
+            <li>Copy the suspect's profile link URL (e.g. <code>https://instagram.com/${suspectUser}</code>).</li>
+            <li>Tap the three dots menu button on the suspect's profile header.</li>
+            <li>Select <strong>Report Account</strong> -> <strong>Impersonation</strong>.</li>
+            <li>Choose "Someone I know" or search for the genuine handle <code>@${genuineUser}</code>.</li>
+            <li>Submit this Cyber Netra analysis report as evidence index logs.</li>
+          </ol>
+        </div>
+      `;
+    }
+  }
+
+  // SIMULATE PDF REPORT EXPORT DOWNLOADS
+  function triggerPDFReportDownload(scan) {
+    showToast("Generating secure evidence PDF...", "info");
+    setTimeout(() => {
+      // Create a temporary link element to download a mock PDF blob
+      const reportContent = `
+        CYBER NETRA DIGITAL FORENSICS - ANALYSIS SUMMARY REPORT
+        ------------------------------------------------------
+        Report Reference Code: CN-${scan.id}-${scan.date.replace(/[- :]/g, "")}
+        Target Username: @${scan.username}
+        Platform: ${scan.platform.toUpperCase()}
+        Risk Score: ${scan.riskScore}/100 (${scan.riskClass})
+        Date Executed: ${scan.date}
+        
+        FLAGGED REASONS:
+        ${scan.reasons.map((r, i) => `[${i + 1}] ${r}`).join("\n")}
+        
+        ------------------------------------------------------
+        Generated automatically by Cyber Netra Safety Node.
+      `;
+      
+      const blob = new Blob([reportContent], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `CyberNetra_Evidence_Report_${scan.username}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      showToast("Forensic evidence report PDF downloaded successfully.", "success");
+    }, 1200);
   }
 
   // 4. VERIFY MEDIA LAB

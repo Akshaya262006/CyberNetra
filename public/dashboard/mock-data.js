@@ -107,13 +107,73 @@ const CyberNetraMockData = {
   // MOCK PROFILE ANALYSES
   profileScans: [
     {
-      id: "SCAN-P-902",
-      username: "ananya_realtor_invest",
+      id: "SCAN-P-001",
+      username: "ananya_official",
+      displayName: "Ananya Sharma",
+      biography: "Verified Financial Consultant | MBA Finance | Helping citizens build secure wealth portfolios. Business enquiries: contact@ananyasharma.in",
+      platform: "instagram",
+      date: "2026-07-10 10:00",
+      riskScore: 8,
+      riskClass: "Low Risk",
+      action: "Authentic profile. Standard security settings verified.",
+      posts: 142,
+      followers: 12500,
+      following: 340,
+      verified: true,
+      claimedLocation: "Mumbai, India",
+      claimedProfession: "Financial Consultant",
+      externalWebsite: "https://ananyasharma.in",
+      behavior: {
+        unusualPosting: false,
+        repeatedComments: false,
+        burstActivity: false,
+        recentAccount: false,
+        suspiciousRatio: false,
+        lowEngagement: false,
+        automatedActions: false,
+        coordinatedPosting: false
+      },
+      consistency: {
+        copiedUsername: false,
+        copiedBio: false,
+        similarAccounts: false,
+        duplicateIndicators: false,
+        locationInconsistent: false,
+        identityMismatch: false,
+        linksSuspicious: false
+      },
+      imageAuthenticity: {
+        matchesFound: 0,
+        originalSource: "Unique original photo",
+        croppedVersions: false,
+        reuseTimeline: "No matches found"
+      },
+      aiMedia: {
+        aiGeneratedProb: 3,
+        faceManipProb: 8,
+        deepfakeProb: 0,
+        editIndicators: false,
+        confidence: "High Confidence"
+      },
+      reasons: ["No suspicious indicators detected."]
+    },
+    {
+      id: "SCAN-P-002",
+      username: "ananya_officia1",
+      displayName: "Ananya Sharma",
+      biography: "Verified Financial Consultant | MBA Finance | Helping citizens build secure wealth portfolios. Business enquiries: contact@ananyasharma.in",
       platform: "instagram",
       date: "2026-07-10 14:05",
-      riskScore: 89,
+      riskScore: 88,
       riskClass: "Highly Suspicious",
-      action: "Avoid communication and do not share financial details.",
+      action: "Report this impersonating copycat account immediately. Do not share credentials or money.",
+      posts: 12,
+      followers: 240,
+      following: 3200,
+      verified: false,
+      claimedLocation: "Mumbai, India",
+      claimedProfession: "Financial Consultant",
+      externalWebsite: "https://ananyasharma-secure-pay.in",
       behavior: {
         unusualPosting: true,
         repeatedComments: true,
@@ -134,79 +194,42 @@ const CyberNetraMockData = {
         linksSuspicious: true
       },
       imageAuthenticity: {
-        matchesFound: 5,
-        originalSource: "https://stock.images.example/photos/female-executive-headshot.jpg",
+        matchesFound: 1,
+        originalSource: "https://instagram.com/ananya_official",
         croppedVersions: true,
-        reuseTimeline: "First seen 3 months ago on 4 unrelated accounts"
+        reuseTimeline: "Matches detected on @ananya_official profile avatar"
       },
       aiMedia: {
-        aiGeneratedProb: 84,
-        faceManipProb: 76,
+        aiGeneratedProb: 12,
+        faceManipProb: 78,
         deepfakeProb: 0,
         editIndicators: true,
         confidence: "High Confidence"
       },
       reasons: [
-        "Profile photograph matches an existing corporate stock directory photo used on 5 other accounts.",
-        "Account follower/following ratio indicates coordinated bot network engagement.",
-        "Biography text is duplicate of an authentic verified financial advisor account.",
-        "High volume of copy-paste promotional comments detected across news pages within 10 minutes."
+        "Username is 94% similar to verified account @ananya_official (look-alike spelling).",
+        "Biography text is 100% duplicate of verified account @ananya_official.",
+        "Profile photograph matches verified user @ananya_official avatar file.",
+        "External URL links to unverified bank gateway portal."
       ]
     },
     {
-      id: "SCAN-P-814",
-      username: "police_helpline_mumbai",
+      id: "SCAN-P-003",
+      username: "investor_helper_netra",
+      displayName: "Netra Investments Desk",
+      biography: "Official wealth advisors. DM for secure earnings. Double your wealth in 30 days guaranteed. Chat link below.",
       platform: "facebook",
       date: "2026-07-09 11:20",
-      riskScore: 92,
-      riskClass: "Highly Suspicious",
-      action: "Report account for impersonation. Do not send identity proofs or payments.",
-      behavior: {
-        unusualPosting: true,
-        repeatedComments: false,
-        burstActivity: true,
-        recentAccount: true,
-        suspiciousRatio: true,
-        lowEngagement: true,
-        automatedActions: false,
-        coordinatedPosting: true
-      },
-      consistency: {
-        copiedUsername: true,
-        copiedBio: true,
-        similarAccounts: true,
-        duplicateIndicators: true,
-        locationInconsistent: true,
-        identityMismatch: true,
-        linksSuspicious: true
-      },
-      imageAuthenticity: {
-        matchesFound: 3,
-        originalSource: "Official Mumbai Police website contact banner",
-        croppedVersions: true,
-        reuseTimeline: "Reused across multiple rogue social groups"
-      },
-      aiMedia: {
-        aiGeneratedProb: 15,
-        faceManipProb: 40,
-        deepfakeProb: 10,
-        editIndicators: true,
-        confidence: "Medium Confidence"
-      },
-      reasons: [
-        "Impersonation of government entity logo and name without verification badges.",
-        "Account registered location points to a mobile gateway outside local district borders.",
-        "Bio contains direct personal bank transfer account numbers for 'fines collection'."
-      ]
-    },
-    {
-      id: "SCAN-P-403",
-      username: "rohit_investments_netra",
-      platform: "linkedin",
-      date: "2026-07-05 09:15",
-      riskScore: 42,
-      riskClass: "Caution",
-      action: "Verify corporate credentials before sharing resumes or bank logs.",
+      riskScore: 78,
+      riskClass: "High Risk",
+      action: "Avoid connection. Reused profile picture found across multiple spam handles.",
+      posts: 5,
+      followers: 840,
+      following: 12,
+      verified: false,
+      claimedLocation: "Delhi, India",
+      claimedProfession: "Investment Advisory",
+      externalWebsite: "https://unverified-portal-forms.org/invest",
       behavior: {
         unusualPosting: false,
         repeatedComments: true,
@@ -221,14 +244,69 @@ const CyberNetraMockData = {
         copiedUsername: false,
         copiedBio: true,
         similarAccounts: false,
+        duplicateIndicators: true,
+        locationInconsistent: true,
+        identityMismatch: true,
+        linksSuspicious: true
+      },
+      imageAuthenticity: {
+        matchesFound: 4,
+        originalSource: "Corporate stock directory catalog",
+        croppedVersions: true,
+        reuseTimeline: "Picture found on 4 other financial groups"
+      },
+      aiMedia: {
+        aiGeneratedProb: 15,
+        faceManipProb: 40,
+        deepfakeProb: 10,
+        editIndicators: true,
+        confidence: "Medium Confidence"
+      },
+      reasons: [
+        "Profile photograph matches 4 unrelated accounts on public web directories.",
+        "Account created recently within the last 10 days.",
+        "Biography uses high-risk double-your-wealth marketing templates."
+      ]
+    },
+    {
+      id: "SCAN-P-004",
+      username: "rohit_kumar_financials",
+      displayName: "Rohit Kumar",
+      biography: "Wealth Specialist | Ex-ICICI | Financial Planner. Helping you manage equity investment plans.",
+      platform: "linkedin",
+      date: "2026-07-08 09:15",
+      riskScore: 81,
+      riskClass: "Highly Suspicious",
+      action: "Avoid communication. Biography is copied from a verified corporate member.",
+      posts: 8,
+      followers: 120,
+      following: 950,
+      verified: false,
+      claimedLocation: "Bangalore, India",
+      claimedProfession: "Financial Planner",
+      externalWebsite: "https://rohit-wealth-advisors.xyz",
+      behavior: {
+        unusualPosting: false,
+        repeatedComments: true,
+        burstActivity: false,
+        recentAccount: true,
+        suspiciousRatio: true,
+        lowEngagement: true,
+        automatedActions: false,
+        coordinatedPosting: false
+      },
+      consistency: {
+        copiedUsername: false,
+        copiedBio: true,
+        similarAccounts: true,
         duplicateIndicators: false,
-        locationInconsistent: false,
-        identityMismatch: false,
+        locationInconsistent: true,
+        identityMismatch: true,
         linksSuspicious: false
       },
       imageAuthenticity: {
         matchesFound: 1,
-        originalSource: "Corporate portal catalog",
+        originalSource: "Corporate portal listings catalog",
         croppedVersions: false,
         reuseTimeline: "First matches found 1 month ago"
       },
@@ -240,9 +318,220 @@ const CyberNetraMockData = {
         confidence: "High Confidence"
       },
       reasons: [
-        "Account biography matches template logs of bulk automated recruiters.",
-        "Follower interaction is low, but account posts repeated promotional task threads."
+        "Biography matches template logs of verified ICICI planner with 96% overlap.",
+        "3 of the latest 5 post captions are exact matches of verified posts from another handle."
       ]
+    },
+    {
+      id: "SCAN-P-005",
+      username: "botnet_agent_24",
+      displayName: "Crypto Desk Agent",
+      biography: "Crypto trading agent. DM for safe returns. High daily profits guaranteed.",
+      platform: "instagram",
+      date: "2026-07-07 16:30",
+      riskScore: 91,
+      riskClass: "Highly Suspicious",
+      action: "Coordinated bot network profile. Do not click links.",
+      posts: 50,
+      followers: 9800,
+      following: 85,
+      verified: false,
+      claimedLocation: "Anonymous",
+      claimedProfession: "Crypto Trader",
+      externalWebsite: "https://invest-double-earn.xyz",
+      behavior: {
+        unusualPosting: true,
+        repeatedComments: true,
+        burstActivity: true,
+        recentAccount: true,
+        suspiciousRatio: true,
+        lowEngagement: true,
+        automatedActions: true,
+        coordinatedPosting: true
+      },
+      consistency: {
+        copiedUsername: false,
+        copiedBio: false,
+        similarAccounts: true,
+        duplicateIndicators: true,
+        locationInconsistent: true,
+        identityMismatch: true,
+        linksSuspicious: true
+      },
+      imageAuthenticity: {
+        matchesFound: 8,
+        originalSource: "Stock profile generator database",
+        croppedVersions: false,
+        reuseTimeline: "Active cluster matches found across 12 bot accounts"
+      },
+      aiMedia: {
+        aiGeneratedProb: 98,
+        faceManipProb: 88,
+        deepfakeProb: 0,
+        editIndicators: true,
+        confidence: "High Confidence"
+      },
+      reasons: [
+        "Coordinated posting template matching 12 active duplicate network profiles.",
+        "High volume comment spam matches automated scripting patterns.",
+        "Avatar photo displays 98% probability of generative AI creation."
+      ]
+    },
+    {
+      id: "SCAN-P-006",
+      username: "new_user_join",
+      displayName: "Amit Kumar",
+      biography: "Student | Tech enthusiast | Sports lover. Just joined social media!",
+      platform: "twitter",
+      date: "2026-07-06 11:20",
+      riskScore: 18,
+      riskClass: "Low Risk",
+      action: "Account is recently created, but shows normal student engagement signals.",
+      posts: 2,
+      followers: 15,
+      following: 40,
+      verified: false,
+      claimedLocation: "Pune, India",
+      claimedProfession: "Student",
+      externalWebsite: "",
+      behavior: {
+        unusualPosting: false,
+        repeatedComments: false,
+        burstActivity: false,
+        recentAccount: true,
+        suspiciousRatio: false,
+        lowEngagement: false,
+        automatedActions: false,
+        coordinatedPosting: false
+      },
+      consistency: {
+        copiedUsername: false,
+        copiedBio: false,
+        similarAccounts: false,
+        duplicateIndicators: false,
+        locationInconsistent: false,
+        identityMismatch: false,
+        linksSuspicious: false
+      },
+      imageAuthenticity: {
+        matchesFound: 0,
+        originalSource: "Unique source image",
+        croppedVersions: false,
+        reuseTimeline: "No matches found"
+      },
+      aiMedia: {
+        aiGeneratedProb: 4,
+        faceManipProb: 5,
+        deepfakeProb: 0,
+        editIndicators: false,
+        confidence: "High Confidence"
+      },
+      reasons: ["No suspicious indicators detected."]
+    },
+    {
+      id: "SCAN-P-007",
+      username: "double_crypto_gain",
+      displayName: "Wealth Double Crypto",
+      biography: "Double your investments safely in hours. Click below for official KYC details.",
+      platform: "instagram",
+      date: "2026-07-05 14:15",
+      riskScore: 84,
+      riskClass: "Highly Suspicious",
+      action: "Avoid external links. URL redirects to a reported cybercrime host.",
+      posts: 15,
+      followers: 1200,
+      following: 54,
+      verified: false,
+      claimedLocation: "Hyderabad, India",
+      claimedProfession: "Investment Advisory",
+      externalWebsite: "https://netrabank-kyc-auth.com",
+      behavior: {
+        unusualPosting: false,
+        repeatedComments: true,
+        burstActivity: true,
+        recentAccount: true,
+        suspiciousRatio: false,
+        lowEngagement: true,
+        automatedActions: false,
+        coordinatedPosting: false
+      },
+      consistency: {
+        copiedUsername: false,
+        copiedBio: false,
+        similarAccounts: false,
+        duplicateIndicators: false,
+        locationInconsistent: true,
+        identityMismatch: true,
+        linksSuspicious: true
+      },
+      imageAuthenticity: {
+        matchesFound: 2,
+        originalSource: "Stock vectors catalog",
+        croppedVersions: false,
+        reuseTimeline: "Matches found on 2 external sales pages"
+      },
+      aiMedia: {
+        aiGeneratedProb: 8,
+        faceManipProb: 15,
+        deepfakeProb: 0,
+        editIndicators: false,
+        confidence: "High Confidence"
+      },
+      reasons: [
+        "Bio URL links to suspicious domain netrabank-kyc-auth.com, blacklisted in Cyber Netra database.",
+        "Location registration points to proxy server nodes outside India."
+      ]
+    },
+    {
+      id: "SCAN-P-008",
+      username: "standard_citizen",
+      displayName: "Ramesh Sen",
+      biography: "Associate Manager at Tata Steel | IIT Kharagpur Alumnus",
+      platform: "linkedin",
+      date: "2026-07-04 09:30",
+      riskScore: 5,
+      riskClass: "Low Risk",
+      action: "Profile exhibits natural posting history and verified associations.",
+      posts: 95,
+      followers: 840,
+      following: 610,
+      verified: false,
+      claimedLocation: "Kolkata, India",
+      claimedProfession: "Associate Manager",
+      externalWebsite: "",
+      behavior: {
+        unusualPosting: false,
+        repeatedComments: false,
+        burstActivity: false,
+        recentAccount: false,
+        suspiciousRatio: false,
+        lowEngagement: false,
+        automatedActions: false,
+        coordinatedPosting: false
+      },
+      consistency: {
+        copiedUsername: false,
+        copiedBio: false,
+        similarAccounts: false,
+        duplicateIndicators: false,
+        locationInconsistent: false,
+        identityMismatch: false,
+        linksSuspicious: false
+      },
+      imageAuthenticity: {
+        matchesFound: 0,
+        originalSource: "Unique avatar file",
+        croppedVersions: false,
+        reuseTimeline: "No matches found"
+      },
+      aiMedia: {
+        aiGeneratedProb: 2,
+        faceManipProb: 4,
+        deepfakeProb: 0,
+        editIndicators: false,
+        confidence: "High Confidence"
+      },
+      reasons: ["No warning indicators found."]
     }
   ],
 
@@ -470,6 +759,14 @@ const CyberNetraMockData = {
         }
       ]
     }
+  ],
+
+  // MOCK REPORTED DOMAINS
+  reportedDomains: [
+    "netrabank-kyc-auth.com",
+    "fastupi-pay.in",
+    "invest-double-earn.xyz",
+    "unverified-portal-forms.org"
   ],
 
   // LANGUAGES

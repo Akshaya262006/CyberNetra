@@ -1200,6 +1200,160 @@ textarea.form-control {
   font-weight: 600;
 }
 
+/* WIZARD & OCR LAYOUTS */
+.wizard-profile-step-panel {
+  display: none;
+  animation: authFade 0.35s ease forwards;
+}
+.wizard-profile-step-panel.active {
+  display: block;
+}
+.flow-steps-tracker {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 24px;
+}
+.flow-steps-tracker::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--border-color);
+  z-index: 1;
+}
+.step-tracker-node {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+.step-node-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #08101d;
+  border: 2px solid var(--border-color);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+.step-node-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color var(--transition-fast);
+}
+.step-tracker-node.active .step-node-dot {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+  box-shadow: var(--glow-blue);
+}
+.step-tracker-node.active .step-node-label {
+  color: #fff;
+}
+
+/* EVIDENCE UPLOAD CARDS */
+.evidence-upload-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  gap: 12px;
+}
+.evidence-card-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+.evidence-card-icon {
+  font-size: 20px;
+  color: var(--accent-cyan);
+}
+.evidence-card-text {
+  min-width: 0;
+  flex: 1;
+}
+.evidence-card-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.evidence-card-size {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.evidence-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.progress-bar-tiny {
+  width: 60px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent-cyan);
+  width: 0;
+  transition: width 0.3s ease;
+}
+
+/* COMPARATIVE METRIC STYLING */
+.comp-split-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 6px;
+}
+.comp-metric-header {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.comp-value-box {
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.comp-value-box.genuine {
+  background: rgba(57, 217, 138, 0.04);
+  border: 1px solid rgba(57, 217, 138, 0.15);
+  color: var(--accent-green);
+}
+.comp-value-box.suspect {
+  background: rgba(255, 77, 94, 0.04);
+  border: 1px solid rgba(255, 77, 94, 0.15);
+  color: var(--accent-red);
+}
+
 /* 3. VERIFY MEDIA PAGE */
 .media-tabs-wrapper {
   margin-bottom: 24px;
