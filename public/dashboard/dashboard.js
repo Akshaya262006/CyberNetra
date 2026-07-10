@@ -747,7 +747,7 @@
       triggerPDFReportDownload(scan);
     };
     document.getElementById("res-action-compare").onclick = () => {
-      openCompareScreen(scan);
+      window.openCompareScreen(scan);
     };
     document.getElementById("res-action-report").onclick = () => {
       switchTab("my-reports");
@@ -1034,7 +1034,7 @@
   }
 
   // 3. PROFILE COMPARISON WIZARD
-  function openCompareScreen(baseScan) {
+  window.openCompareScreen = function (baseScan) {
     window.switchCheckProfileSubscreen("compare");
 
     const genUsernameInput = document.getElementById("comp-genuine-username");
