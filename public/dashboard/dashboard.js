@@ -101,7 +101,10 @@
     document.querySelectorAll("[data-user-name]").forEach((el) => {
       el.textContent = userSession.name;
     });
-    document.getElementById("user-profile-email").textContent = userSession.mobile || userSession.email;
+    const userProfileEmail = document.getElementById("user-profile-email");
+    if (userProfileEmail) {
+      userProfileEmail.textContent = userSession.mobile || userSession.email;
+    }
 
     // Collapsible Left Sidebar toggle
     const toggleSidebarBtn = document.getElementById("toggle-sidebar-btn");
