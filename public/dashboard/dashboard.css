@@ -1104,15 +1104,15 @@ textarea.form-control {
 .findings-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 
 .finding-row {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
-  padding: 16px;
-  border-radius: 10px;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 8px;
   background: rgba(4, 9, 20, 0.4);
   border: 1px solid var(--border-color);
 }

@@ -1441,7 +1441,6 @@
     document.getElementById("m-res-risk-percent").textContent = `${riskScore}%`;
     document.getElementById("m-res-risk-class").className = `badge ${badgeClass}`;
     document.getElementById("m-res-risk-class").textContent = scan.riskClass.toUpperCase();
-    document.getElementById("m-res-summary").textContent = scan.summary;
 
     // Hide all sub panels
     const imgDetails = document.getElementById("media-result-details-image");
