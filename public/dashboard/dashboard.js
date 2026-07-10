@@ -1460,6 +1460,11 @@
       document.getElementById("m-img-match-count").textContent = imageInfo.similarImages;
       document.getElementById("m-img-manip").textContent = `${imageInfo.manipulationProb}%`;
       document.getElementById("m-img-source").textContent = imageInfo.originalSource || "Unique Capture";
+
+      // Dynamically toggle flagged classes based on risk metrics instead of hardcoding
+      document.getElementById("row-img-score").classList.toggle("flagged", imageInfo.aiGeneratedProb > 50);
+      document.getElementById("row-img-matches").classList.toggle("flagged", imageInfo.similarImages > 0);
+      document.getElementById("row-img-manip").classList.toggle("flagged", imageInfo.manipulationProb > 50);
     } else if (scan.fileType === "video") {
       vidDetails.style.display = "block";
       const videoInfo = scan.video;
