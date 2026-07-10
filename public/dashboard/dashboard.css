@@ -80,9 +80,11 @@
   height: 38px;
 }
 
-.sidebar-logo svg {
+.sidebar-logo svg,
+.sidebar-logo img {
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 
 .sidebar-brand-text {

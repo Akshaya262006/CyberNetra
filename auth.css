@@ -221,9 +221,11 @@
   height: 44px;
 }
 
-.auth-brand-logo svg {
+.auth-brand-logo svg,
+.auth-brand-logo img {
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 
 .auth-brand-name {
@@ -471,9 +473,11 @@
   margin-bottom: 12px;
 }
 
-.sidebar-logo svg {
+.sidebar-logo svg,
+.sidebar-logo img {
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 
 .dashboard-nav strong {
