@@ -1377,7 +1377,15 @@
     }
 
     try {
+      const startTime = Date.now();
       const response = await window.CyberNetraServices.verifyMedia(file, fileType);
+      
+      const elapsed = Date.now() - startTime;
+      const delayNeeded = 4000 - elapsed;
+      if (delayNeeded > 0) {
+        await new Promise(resolve => setTimeout(resolve, delayNeeded));
+      }
+
       if (loaderInterval) clearInterval(loaderInterval);
       
       dropzone.innerHTML = origHtml;
