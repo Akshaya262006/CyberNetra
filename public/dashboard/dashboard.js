@@ -329,24 +329,23 @@
       const logsBox = document.getElementById("scanning-logs-box");
       logsBox.innerHTML = "";
       const scanStages = [
-        "Initializing scan sequence...",
-        `Target: @${username || "suspicious_account"} on ${selectedPlatform.toUpperCase()}`,
-        "Fetching remote profile metadata...",
-        "Evaluating posting patterns...",
-        "Checking follower & engagement metrics...",
-        "Scanning profile avatar across index nodes...",
-        "Running AI facial synthesis models...",
-        "Analyzing biography duplicates...",
-        "Compiling risk report..."
+        "Reading profile details",
+        "Analysing behaviour",
+        "Checking identity consistency",
+        "Searching for image reuse",
+        "Checking AI-media indicators",
+        "Preparing risk score"
       ];
 
       for (let i = 0; i < scanStages.length; i++) {
         const item = document.createElement("div");
         item.className = "scanning-log-item";
-        item.textContent = `> ${scanStages[i]}`;
+        item.textContent = `⏳ ${scanStages[i]}...`;
         logsBox.appendChild(item);
         logsBox.scrollTop = logsBox.scrollHeight;
-        await new Promise((r) => setTimeout(r, 200));
+        await new Promise((r) => setTimeout(r, 450));
+        item.textContent = `✓ ${scanStages[i]} - Complete.`;
+        item.style.color = "var(--accent-cyan)";
       }
 
       // Call Mock API
@@ -440,6 +439,9 @@
       }
       showToast(`@${scan.username} added to watchlist successfully.`, "success");
     };
+    document.getElementById("res-action-download").onclick = () => {
+      showToast("Forensic evidence report PDF generated and downloaded.", "success");
+    };
     document.getElementById("res-action-compare").onclick = () => {
       openCompareScreen(scan);
     };
@@ -448,6 +450,9 @@
       // Pre-fill creation flow steps
       document.getElementById("incident-suspect-username").value = scan.username;
       document.getElementById("incident-suspect-url").value = `https://${scan.platform}.com/${scan.username}`;
+    };
+    document.getElementById("res-action-flag-incorrect").onclick = () => {
+      showToast("Incorrect result logged. Specialists will review this profile score.", "info");
     };
     document.getElementById("res-action-delete").onclick = async () => {
       if (confirm("Delete this scan result permanently?")) {
@@ -468,107 +473,198 @@
     if (tabName === "behavior") {
       const b = scan.behavior;
       list.innerHTML = `
-        <div class="finding-row ${b.recentAccount ? "flagged" : "good"}">
-          <i class="fa-solid ${b.recentAccount ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
+        <div class="finding-row ${b.unusualPosting ? "flagged" : "good"}">
+          <i class="fa-solid ${b.unusualPosting ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
           <div class="finding-row-text">
-            <h5>Account Age</h5>
-            <p>${b.recentAccount ? "This account was recently created within the last 15 days, which is common for threat vectors." : "Standard account age detected."}</p>
-          </div>
-        </div>
-        <div class="finding-row ${b.suspiciousRatio ? "flagged" : "good"}">
-          <i class="fa-solid ${b.suspiciousRatio ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
-          <div class="finding-row-text">
-            <h5>Follower / Following Ratio</h5>
-            <p>${b.suspiciousRatio ? "Extremely high following count compared to small followers. Mimics automated mass-following bots." : "Normal network ratios."}</p>
-          </div>
-        </div>
-        <div class="finding-row ${b.lowEngagement ? "flagged" : "good"}">
-          <i class="fa-solid ${b.lowEngagement ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
-          <div class="finding-row-text">
-            <h5>Engagement Rate</h5>
-            <p>${b.lowEngagement ? "Engagement is less than 0.5% despite the follower count. Hints at bought or fake followers." : "Engagement matches active user base."}</p>
+            <h5>Unusual Posting Pattern</h5>
+            <p>${b.unusualPosting ? "High anomaly. Post timings indicate off-peak bulk sharing coordinates." : "Low risk. Normal human sharing timelines."}</p>
           </div>
         </div>
         <div class="finding-row ${b.repeatedComments ? "flagged" : "good"}">
           <i class="fa-solid ${b.repeatedComments ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
           <div class="finding-row-text">
-            <h5>Posting Comment Stream</h5>
-            <p>${b.repeatedComments ? "Copy-paste advertising statements found repetitively posted across multiple target pages." : "Regular comment behavior."}</p>
+            <h5>Repeated Comments</h5>
+            <p>${b.repeatedComments ? "High risk. Automated spamming comments detected across posts." : "Safe. Unique user comments verified."}</p>
+          </div>
+        </div>
+        <div class="finding-row ${b.burstActivity ? "flagged" : "good"}">
+          <i class="fa-solid ${b.burstActivity ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
+          <div class="finding-row-text">
+            <h5>Sudden Activity Bursts</h5>
+            <p>${b.burstActivity ? "Caution. High spike in account activity after long periods of silence." : "Safe. Steady profile activity timelines."}</p>
+          </div>
+        </div>
+        <div class="finding-row ${b.recentAccount ? "flagged" : "good"}">
+          <i class="fa-solid ${b.recentAccount ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
+          <div class="finding-row-text">
+            <h5>Recently Created Account</h5>
+            <p>${b.recentAccount ? "High risk. Account created within the last 15 days, a common pattern for scam handles." : "Safe. Mature profile lifespan verified."}</p>
+          </div>
+        </div>
+        <div class="finding-row ${b.suspiciousRatio ? "flagged" : "good"}">
+          <i class="fa-solid ${b.suspiciousRatio ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
+          <div class="finding-row-text">
+            <h5>Suspicious Follower/Following Ratio</h5>
+            <p>${b.suspiciousRatio ? "Flagged. Profile follows a large volume of users but has very few return followers." : "Safe. Normal friend follower ratio."}</p>
+          </div>
+        </div>
+        <div class="finding-row ${b.lowEngagement ? "flagged" : "good"}">
+          <i class="fa-solid ${b.lowEngagement ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
+          <div class="finding-row-text">
+            <h5>Low Engagement Compared with Follower Count</h5>
+            <p>${b.lowEngagement ? "Caution. Account follower count is high but post likes/comments are near zero." : "Safe. Regular user interactions verified."}</p>
+          </div>
+        </div>
+        <div class="finding-row ${b.automatedActions ? "flagged" : "good"}">
+          <i class="fa-solid ${b.automatedActions ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
+          <div class="finding-row-text">
+            <h5>Possible Automated Behaviour</h5>
+            <p>${b.automatedActions ? "Flagged. User-agent activity indicators reveal high probability of bot scripts." : "Safe. Natural human session interactions."}</p>
+          </div>
+        </div>
+        <div class="finding-row ${b.coordinatedPosting ? "flagged" : "good"}">
+          <i class="fa-solid ${b.coordinatedPosting ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
+          <div class="finding-row-text">
+            <h5>Coordinated Posting Signals</h5>
+            <p>${b.coordinatedPosting ? "Caution. Matches identical post templates shared concurrently by duplicate networks." : "Safe. No coordinate network flags found."}</p>
           </div>
         </div>
       `;
     } else if (tabName === "consistency") {
       const c = scan.consistency;
       list.innerHTML = `
+        <div class="finding-row ${c.copiedUsername ? "flagged" : "good"}">
+          <i class="fa-solid ${c.copiedUsername ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
+          <div class="finding-row-text">
+            <h5>Copied Username</h5>
+            <p>${c.copiedUsername ? "High risk. Username uses lookalike characters (homoglyphs) to mimic verified names." : "Safe. Unique handle spelling."}</p>
+          </div>
+        </div>
         <div class="finding-row ${c.copiedBio ? "flagged" : "good"}">
           <i class="fa-solid ${c.copiedBio ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
           <div class="finding-row-text">
-            <h5>Biography Analysis</h5>
-            <p>${c.copiedBio ? "Biography contains text blocks that match existing verified corporate listings. Possible impersonation." : "Unique profile biography."}</p>
+            <h5>Copied Biography</h5>
+            <p>${c.copiedBio ? "High risk. Text matches bio templates of existing public figures or business sites." : "Safe. Biography is unique."}</p>
           </div>
         </div>
-        <div class="finding-row ${c.linksSuspicious ? "flagged" : "good"}">
-          <i class="fa-solid ${c.linksSuspicious ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
+        <div class="finding-row ${c.similarAccounts ? "flagged" : "good"}">
+          <i class="fa-solid ${c.similarAccounts ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
           <div class="finding-row-text">
-            <h5>External URL Link</h5>
-            <p>${c.linksSuspicious ? "Profile link redirects to an unverified payment gateway or anonymous form." : "Links point to safe networks."}</p>
+            <h5>Similar Account Names</h5>
+            <p>${c.similarAccounts ? "Caution. Multiple profiles exist with identical or closely related name prefixes." : "Safe. No redundant account name clusters."}</p>
+          </div>
+        </div>
+        <div class="finding-row ${c.duplicateIndicators ? "flagged" : "good"}">
+          <i class="fa-solid ${c.duplicateIndicators ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
+          <div class="finding-row-text">
+            <h5>Duplicate-Profile Indicators</h5>
+            <p>${c.duplicateIndicators ? "Flagged. Multiple profile pages share matching photos and bio details." : "Safe. No duplicates found."}</p>
           </div>
         </div>
         <div class="finding-row ${c.locationInconsistent ? "flagged" : "good"}">
           <i class="fa-solid ${c.locationInconsistent ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
           <div class="finding-row-text">
-            <h5>Network Registration Location</h5>
-            <p>${c.locationInconsistent ? "ISP registration nodes point outside the stated profile city boundaries." : "Consistency with local nodes."}</p>
+            <h5>Location Inconsistency</h5>
+            <p>${c.locationInconsistent ? "Flagged. Account registration country does not align with targeted local posts." : "Safe. Local region coordinates verified."}</p>
+          </div>
+        </div>
+        <div class="finding-row ${c.identityMismatch ? "flagged" : "good"}">
+          <i class="fa-solid ${c.identityMismatch ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
+          <div class="finding-row-text">
+            <h5>Identity Mismatch</h5>
+            <p>${c.identityMismatch ? "Caution. Stated name does not match email handle prefixes or link details." : "Safe. Account identity markers match."}</p>
+          </div>
+        </div>
+        <div class="finding-row ${c.duplicateIndicators ? "flagged" : "good"}">
+          <i class="fa-solid ${c.duplicateIndicators ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
+          <div class="finding-row-text">
+            <h5>Possible Impersonation</h5>
+            <p>${c.duplicateIndicators ? "Flagged. Account exhibits coordinates to copycat existing citizen contacts." : "Safe. Original identity."}</p>
+          </div>
+        </div>
+        <div class="finding-row ${c.linksSuspicious ? "flagged" : "good"}">
+          <i class="fa-solid ${c.linksSuspicious ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
+          <div class="finding-row-text">
+            <h5>Links to Suspicious Websites</h5>
+            <p>${c.linksSuspicious ? "Flagged. Bio link redirects to blacklisted domain lists or phishing portals." : "Safe. Links direct to safe portals."}</p>
           </div>
         </div>
       `;
     } else if (tabName === "images") {
       const img = scan.imageAuthenticity;
-      if (img.matchesFound > 0) {
-        list.innerHTML = `
-          <div class="finding-row flagged">
-            <i class="fa-solid fa-images"></i>
-            <div class="finding-row-text">
-              <h5>Image Reverse Matching</h5>
-              <p>Found <strong>${img.matchesFound} matches</strong> of the profile picture across search directories.</p>
-              <span class="badge badge-red" style="margin-top:6px">Reused Image</span>
-            </div>
+      list.innerHTML = `
+        <div class="finding-row ${img.matchesFound > 0 ? "flagged" : "good"}">
+          <i class="fa-solid fa-copy"></i>
+          <div class="finding-row-text">
+            <h5>Same Image Found on Other Accounts</h5>
+            <p>${img.matchesFound > 0 ? `Flagged. Profile picture is identical to images detected on <strong>${img.matchesFound} other accounts</strong>.` : "Unique profile photograph. No duplicates found."}</p>
           </div>
-          <div class="finding-row flagged">
-            <i class="fa-solid fa-link"></i>
-            <div class="finding-row-text">
-              <h5>Identified Original Source</h5>
-              <p><a href="#" class="btn-ghost" style="text-decoration:underline">${img.originalSource}</a></p>
-              <span>Timeline: ${img.reuseTimeline}</span>
-            </div>
+        </div>
+        <div class="finding-row ${img.croppedVersions ? "flagged" : "good"}">
+          <i class="fa-solid fa-crop"></i>
+          <div class="finding-row-text">
+            <h5>Cropped or Edited Versions</h5>
+            <p>${img.croppedVersions ? "Flagged. Reused image exhibits cropping, rotation, and filter alteration flags." : "No editing marks detected on profile image."}</p>
           </div>
-        `;
-      } else {
-        list.innerHTML = `
-          <div class="finding-row good">
-            <i class="fa-solid fa-images"></i>
-            <div class="finding-row-text">
-              <h5>Avatar Verification</h5>
-              <p>No reuse of this profile avatar detected on public indices. Stems from a unique source.</p>
-            </div>
+        </div>
+        <div class="finding-row ${img.matchesFound > 0 ? "flagged" : "good"}">
+          <i class="fa-solid fa-globe"></i>
+          <div class="finding-row-text">
+            <h5>Possible Original Image Source</h5>
+            <p>${img.matchesFound > 0 ? `Match detected: <a href="#" class="btn-ghost" style="text-decoration:underline">${img.originalSource}</a>` : "No matches in public stock directories."}</p>
           </div>
-        `;
-      }
+        </div>
+        <div class="finding-row ${img.matchesFound > 0 ? "flagged" : "good"}">
+          <i class="fa-solid fa-circle-nodes"></i>
+          <div class="finding-row-text">
+            <h5>Number of Image Matches</h5>
+            <p>Reverse lookup search matches found: <strong>${img.matchesFound} matches</strong>.</p>
+          </div>
+        </div>
+        <div class="finding-row ${img.matchesFound > 0 ? "flagged" : "good"}">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <div class="finding-row-text">
+            <h5>Image Reuse Timeline</h5>
+            <p>${img.matchesFound > 0 ? img.reuseTimeline : "No historical image reuse detected."}</p>
+          </div>
+        </div>
+      `;
     } else if (tabName === "ai") {
       const ai = scan.aiMedia;
       list.innerHTML = `
         <div class="finding-row ${ai.aiGeneratedProb > 50 ? "flagged" : "good"}">
           <i class="fa-solid fa-brain"></i>
           <div class="finding-row-text">
-            <h5>Generative Face Probability</h5>
-            <p>Analysis indicates <strong>${ai.aiGeneratedProb}% chance</strong> that this face has been synthetically generated by AI model neural networks.</p>
+            <h5>AI-Generated Probability</h5>
+            <p>Score: <strong>${ai.aiGeneratedProb}%</strong>. Evaluated chance of synthetic GAN face generation.</p>
           </div>
         </div>
         <div class="finding-row ${ai.faceManipProb > 50 ? "flagged" : "good"}">
           <i class="fa-solid fa-mask"></i>
           <div class="finding-row-text">
-            <h5>Face Manipulation / Blending</h5>
-            <p>Facial edge checks detect <strong>${ai.faceManipProb}% anomaly rating</strong> around eyes, mouth, and hair boundaries.</p>
+            <h5>Face Manipulation Probability</h5>
+            <p>Score: <strong>${ai.faceManipProb}%</strong>. Boundary pixel irregularities check.</p>
+          </div>
+        </div>
+        <div class="finding-row good">
+          <i class="fa-solid fa-clapperboard"></i>
+          <div class="finding-row-text">
+            <h5>Deepfake Probability</h5>
+            <p>Score: <strong>0%</strong>. No face-swap video components detected (Static Avatar profile image only).</p>
+          </div>
+        </div>
+        <div class="finding-row ${ai.editIndicators ? "flagged" : "good"}">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <div class="finding-row-text">
+            <h5>Editing Indicators</h5>
+            <p>${ai.editIndicators ? "Caution. High rating of local blurring or pixel cloning edits." : "No photo editing indicator marks found."}</p>
+          </div>
+        </div>
+        <div class="finding-row good">
+          <i class="fa-solid fa-shield-halved"></i>
+          <div class="finding-row-text">
+            <h5>Confidence Level</h5>
+            <p>Confidence index: <strong>${ai.confidence}</strong>.</p>
           </div>
         </div>
       `;
