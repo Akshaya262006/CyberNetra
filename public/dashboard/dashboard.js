@@ -149,6 +149,9 @@
   });
 
   // NAVIGATION TABS
+  window.switchTab = switchTab;
+  window.renderProfileResultScreen = renderProfileResultScreen;
+
   function switchTab(viewId) {
     currentView = viewId;
 
