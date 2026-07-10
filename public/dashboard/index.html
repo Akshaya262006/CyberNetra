@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Public Dashboard | Cyber Netra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="../../auth.css">
+</head>
+<body class="auth-page" data-auth-page="public-dashboard">
+  <main class="dashboard-shell">
+    <nav class="dashboard-nav" aria-label="Public dashboard navigation">
+      <strong>Cyber Netra Public</strong>
+      <a class="is-active" href="#">Dashboard</a>
+      <a href="#">Check Profile</a>
+      <a href="#">Verify Media</a>
+      <a href="#">Cyber Alerts</a>
+      <a href="#">Report Cybercrime</a>
+      <a href="#">Track Complaint</a>
+      <a href="#">Safety Hub</a>
+      <a href="#">Account</a>
+      <button type="button" data-logout>Logout</button>
+    </nav>
+
+    <section class="dashboard-main">
+      <div class="dashboard-top">
+        <div>
+          <span class="auth-eyebrow">Citizen Dashboard</span>
+          <h1>Welcome, <span data-user-name>Public User</span></h1>
+          <p>Public users can manage scans, reports, watchlists and safety recommendations here.</p>
+        </div>
+        <a class="auth-secondary" href="../../index (3).html">Back to Home</a>
+      </div>
+
+      <div class="dashboard-grid">
+        <article class="dashboard-card"><span>Profiles Checked</span><strong>18</strong></article>
+        <article class="dashboard-card"><span>Saved Profiles</span><strong>7</strong></article>
+        <article class="dashboard-card"><span>Active Watchlist</span><strong>4</strong></article>
+        <article class="dashboard-card"><span>Reports Submitted</span><strong>3</strong></article>
+      </div>
+
+      <div class="dashboard-panels">
+        <article class="dashboard-panel">
+          <h2>Recent Scans</h2>
+          <ul class="dashboard-list">
+            <li>Instagram profile scored 87/100: Highly Suspicious</li>
+            <li>LinkedIn recruiter profile scored 62/100: Review Needed</li>
+            <li>Profile image reuse detected across 5 accounts</li>
+          </ul>
+        </article>
+        <article class="dashboard-panel">
+          <h2>Complaint Status</h2>
+          <ul class="dashboard-list">
+            <li>CN-2026-000184: Under Review</li>
+            <li>CN-2026-000173: Additional evidence requested</li>
+            <li>Duplicate-profile alert changed to High Risk</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+  <script src="../../auth-service.js"></script>
+  <script src="../../auth-pages.js"></script>
+</body>
+</html>

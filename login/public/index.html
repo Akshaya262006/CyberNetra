@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Public Login | Cyber Netra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="../../auth.css">
+</head>
+<body class="auth-page" data-auth-page="public-login">
+  <main class="auth-shell">
+    <section class="auth-brand">
+      <a href="../../index (3).html">Cyber Netra</a>
+      <h1>Public Login</h1>
+      <p>Access your citizen dashboard, profile checks, media verification and cybercrime reports.</p>
+    </section>
+
+    <section class="auth-card">
+      <div class="auth-heading">
+        <span class="auth-eyebrow">Citizen Access</span>
+        <h1>Login to Cyber Netra</h1>
+        <p>Use the hackathon demo credentials or your newly created public account.</p>
+      </div>
+      <form class="auth-form" id="public-login-form" novalidate>
+        <label class="auth-field" for="mobile">Mobile Number
+          <span class="auth-input-wrap">
+            <span class="auth-icon" aria-hidden="true">TEL</span>
+            <span class="auth-prefix">+91</span>
+            <input id="mobile" data-mobile type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" placeholder="9876543210">
+          </span>
+          <span class="auth-error" data-error-for="mobile"></span>
+        </label>
+
+        <label class="auth-field" for="password">Password
+          <span class="auth-input-wrap">
+            <input id="password" type="password" autocomplete="current-password" placeholder="Enter password">
+            <button class="password-toggle" type="button" data-password-toggle="password">Show</button>
+          </span>
+          <span class="auth-error" data-error-for="password"></span>
+        </label>
+
+        <span class="auth-error" data-error-for="form"></span>
+        <div class="auth-actions">
+          <button class="auth-btn auth-btn-primary" type="submit">Login</button>
+        </div>
+        <div class="auth-link-row">
+          <a class="auth-link" href="../../forgot-password/">Forgot Password?</a>
+          <a class="auth-link" href="../../signup/">New user? Sign In</a>
+          <a class="auth-link" href="../../index (3).html">Back to Login Options</a>
+          <a class="auth-link" href="../../index (3).html">Back to Home</a>
+        </div>
+      </form>
+    </section>
+  </main>
+  <script src="../../auth-service.js"></script>
+  <script src="../../auth-pages.js"></script>
+</body>
+</html>

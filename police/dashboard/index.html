@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Police Dashboard | Cyber Netra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="../../auth.css">
+</head>
+<body class="auth-page" data-auth-page="police-dashboard">
+  <main class="dashboard-shell">
+    <nav class="dashboard-nav" aria-label="Police dashboard navigation">
+      <strong>Cyber Netra Police</strong>
+      <a class="is-active" href="#">Overview</a>
+      <a href="#">Complaints</a>
+      <a href="#">High-Risk Cases</a>
+      <a href="#">Investigations</a>
+      <a href="#">Evidence</a>
+      <a href="#">Profile Analysis</a>
+      <a href="#">Analytics</a>
+      <a href="#">Audit Logs</a>
+      <a href="#">Account</a>
+      <button type="button" data-logout>Logout</button>
+    </nav>
+
+    <section class="dashboard-main">
+      <div class="dashboard-top">
+        <div>
+          <span class="auth-eyebrow">Investigator Portal</span>
+          <h1>Welcome, <span data-user-name>Officer</span></h1>
+          <p>Authorized investigator tools are separated from public user features and protected by role checks.</p>
+        </div>
+        <a class="auth-secondary" href="../../index (3).html">Back to Home</a>
+      </div>
+
+      <div class="dashboard-grid">
+        <article class="dashboard-card"><span>New Cases</span><strong>24</strong></article>
+        <article class="dashboard-card"><span>Critical Cases</span><strong>6</strong></article>
+        <article class="dashboard-card"><span>Awaiting Assignment</span><strong>11</strong></article>
+        <article class="dashboard-card"><span>Evidence Files</span><strong>148</strong></article>
+      </div>
+
+      <div class="dashboard-panels">
+        <article class="dashboard-panel">
+          <h2>High-Risk Cases</h2>
+          <ul class="dashboard-list">
+            <li>Fake police profile requesting payments: Critical</li>
+            <li>AI voice-cloning complaint linked to financial fraud</li>
+            <li>Duplicate-account cluster with 19 related profiles</li>
+          </ul>
+        </article>
+        <article class="dashboard-panel">
+          <h2>Investigation Queue</h2>
+          <ul class="dashboard-list">
+            <li>Case CN-2026-000184 assigned to Cyber Cell North</li>
+            <li>Reverse-image result ready for evidence export</li>
+            <li>Audit log review pending for profile cluster update</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+  <script src="../../auth-service.js"></script>
+  <script src="../../auth-pages.js"></script>
+</body>
+</html>

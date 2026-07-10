@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberNetra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+  <main class="site-shell" aria-label="CyberNetra home page">
+    <section class="page-shell hero-section" aria-label="CyberNetra hero">
+      <img class="home-image" src="assets/home-page.png" alt="CyberNetra home page with cybersecurity shield artwork">
+
+      <nav class="hotspot-nav" aria-label="Primary navigation">
+        <a class="hotspot nav-brand" href="#home" aria-label="CyberNetra home"></a>
+        <a class="hotspot nav-home is-active" href="#home" aria-label="Home">Home</a>
+        <a class="hotspot nav-about" href="#about" aria-label="About">About</a>
+        <a class="hotspot nav-services" href="#features" aria-label="Services">Services</a>
+        <a class="hotspot nav-testimonials" href="#testimonials" aria-label="Testimonials">Testimonials</a>
+        <a class="hotspot nav-clients" href="#partners" aria-label="Our Clients">Our Clients</a>
+        <a class="hotspot nav-blogs" href="#alerts" aria-label="Alerts">Alerts</a>
+        <a class="hotspot nav-contact" href="#contact" aria-label="Contact">Contact</a>
+      </nav>
+
+      <button class="hotspot button-login" type="button" data-action="Login" aria-label="Login">Login</button>
+      <button class="hotspot button-signin" type="button" data-action="Sign In" aria-label="Sign In">Sign In</button>
+
+      <div class="sr-content" id="home">
+        <h1>CyberNetra</h1>
+        <p>Protecting people from fake accounts, stolen identities, deepfakes and evolving social-media threats using artificial intelligence.</p>
+      </div>
+    </section>
+
+    <section class="page-shell details-section" id="features" aria-label="CyberNetra core pillars, certification and about">
+      <div class="details-circuit details-circuit-left" aria-hidden="true"></div>
+      <div class="details-circuit details-circuit-right" aria-hidden="true"></div>
+      <div class="details-inner">
+        <div class="center-heading details-heading">
+          <span class="eyebrow">Services</span>
+          <p>Comprehensive Digital Protection</p>
+        </div>
+
+        <div class="pillar-grid">
+          <article class="pillar-card reveal">
+            <div class="pillar-icon fingerprint-icon" aria-hidden="true"></div>
+            <h3>Identity Protection</h3>
+            <p>Identify suspicious digital behavior and anomalies with real-time AI scanning.</p>
+          </article>
+          <article class="pillar-card reveal">
+            <div class="pillar-icon shield-icon" aria-hidden="true"></div>
+            <h3>Media Verification</h3>
+            <p>Detect manipulated media, deepfakes, and synthetic content to ensure authenticity.</p>
+          </article>
+          <article class="pillar-card reveal">
+            <div class="pillar-icon report-icon" aria-hidden="true"></div>
+            <h3>Incident Reporting</h3>
+            <p>Support evidence-based reporting and streamline investigations for authorities.</p>
+          </article>
+        </div>
+
+        <div class="iso-band reveal">
+          <div class="iso-lock" aria-hidden="true"></div>
+          <div class="iso-copy">
+            <span class="eyebrow">ISO Certified</span>
+            <p>Cyber Netra is an <strong>ISO 27001:2022</strong> certified platform, ensuring internationally recognized standards for information security and data protection.</p>
+            <small>Our certified scope includes AI-driven identity verification, media authentication, and secure incident reporting protocols.</small>
+          </div>
+          <div class="iso-seal" aria-hidden="true">
+            <strong>ISO</strong>
+            <span>27001:2022</span>
+            <small>Certified</small>
+          </div>
+        </div>
+
+        <div class="coded-about reveal" id="about">
+          <div class="coded-about-copy">
+            <span class="eyebrow">About Us</span>
+            <p class="about-kicker">Your Trusted Cybersecurity Partner</p>
+            <h2>A Safer Digital Space for Everyone</h2>
+            <p>Cyber Netra is an AI-powered platform dedicated to elevating digital threat awareness. We bridge the gap between complex cybersecurity data and actionable intelligence for the public and authorities alike.</p>
+            <p>Our mission is to establish a verified baseline of trust online, empowering users to navigate the digital landscape safely while providing investigators with the tools needed to combat fraud effectively.</p>
+          </div>
+          <div class="coded-about-visual" aria-hidden="true">
+            <div class="review-panel">
+              <div class="review-header">
+                <span>Identity Review</span>
+                <strong>Verified Workflow</strong>
+              </div>
+              <div class="review-row">
+                <span>Profile Signals</span>
+                <strong>12 checks</strong>
+              </div>
+              <div class="review-row">
+                <span>Media Authenticity</span>
+                <strong>4 files</strong>
+              </div>
+              <div class="review-row">
+                <span>Evidence Package</span>
+                <strong>Ready</strong>
+              </div>
+              <div class="review-progress"><span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-shell alerts-section" id="alerts" aria-label="Latest cyber alerts">
+      <div class="section-inner">
+        <div class="section-heading-row">
+          <div>
+            <h2>Public Cyber Alerts</h2>
+            <p class="section-lede">Stay informed about the latest digital threats.</p>
+          </div>
+          <a class="btn btn-ghost" href="#" data-action="View All Alerts">View all alerts <span aria-hidden="true">&rarr;</span></a>
+        </div>
+
+        <div class="alerts-grid">
+          <article class="alert-card reveal severity-critical">
+            <div class="alert-top">
+              <span class="severity-badge">Critical</span>
+              <span class="alert-date">Today</span>
+            </div>
+            <h3>Fake Recruitment Scam</h3>
+            <p>Fraudulent job offers requesting upfront payment for equipment or training. Avoid sharing financial details.</p>
+            <a class="alert-link" href="#" data-action="View Alert: Fake Recruitment">Read full alert <span aria-hidden="true">&rarr;</span></a>
+          </article>
+
+          <article class="alert-card reveal severity-high">
+            <div class="alert-top">
+              <span class="severity-badge">High</span>
+              <span class="alert-date">Yesterday</span>
+            </div>
+            <h3>AI Voice-Cloning Alert</h3>
+            <p>Scammers are using AI to clone voices of family members in distress to extort money. Always verify independently.</p>
+            <a class="alert-link" href="#" data-action="View Alert: Voice Cloning">Read full alert <span aria-hidden="true">&rarr;</span></a>
+          </article>
+
+          <article class="alert-card reveal severity-medium">
+            <div class="alert-top">
+              <span class="severity-badge">Medium</span>
+              <span class="alert-date">2 days ago</span>
+            </div>
+            <h3>Job Fraud Warning</h3>
+            <p>Increase in phishing links disguised as legitimate job portals. Check URLs carefully before submitting data.</p>
+            <a class="alert-link" href="#" data-action="View Alert: Duplicate Profiles">Read full alert <span aria-hidden="true">&rarr;</span></a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-shell testimonials-section" id="testimonials" aria-label="CyberNetra testimonials">
+      <div class="section-inner">
+        <div class="center-heading">
+          <span class="eyebrow">Testimonials</span>
+          <h2>What Authorities Say</h2>
+        </div>
+        <div class="testimonial-grid">
+          <article class="testimonial-card reveal">
+            <div class="quote-label">Cyber Cell</div>
+            <p>"Cyber Netra's platform has significantly reduced our response time for identity fraud cases. The AI verification is incredibly accurate and easy to integrate into our workflow."</p>
+            <div class="person"><span></span><strong>Rajesh Kumar</strong><small>Cyber Cell Inspector</small></div>
+          </article>
+          <article class="testimonial-card reveal">
+            <div class="quote-label">Public Safety</div>
+            <p>"The public alert system has been instrumental in preemptively warning citizens about emerging scams. It's a vital tool for community digital safety."</p>
+            <div class="person"><span></span><strong>Anita Desai</strong><small>Nodal Officer</small></div>
+          </article>
+          <article class="testimonial-card reveal">
+            <div class="quote-label">Forensics</div>
+            <p>"We rely on the deepfake detection capabilities daily. It provides clear, actionable evidence that stands up in our investigations."</p>
+            <div class="person"><span></span><strong>Vikram Singh</strong><small>Forensic Analyst</small></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-shell partners-section" id="partners" aria-label="CyberNetra trusted partners">
+      <div class="section-inner partners-inner">
+        <div class="center-heading">
+          <span class="eyebrow">Our Trusted Partners</span>
+        </div>
+        <div class="partner-row">
+          <div class="partner-item">State Police</div>
+          <div class="partner-item">Cyber Cell</div>
+          <div class="partner-item">NCCC</div>
+          <div class="partner-item">Cert-IN</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-shell contact-section" id="contact" aria-label="Contact Cyber Netra">
+      <div class="section-inner contact-inner">
+        <div class="contact-copy reveal">
+          <span class="eyebrow">Contact Us</span>
+          <h2>Need Assistance?</h2>
+          <p>Comprehensive security solutions tailored to your needs.</p>
+          <div class="direct-contact">
+            <div><strong>Email Us</strong><span>support@cybernetra.gov</span></div>
+            <div><strong>Call Us</strong><span>+91 1800-123-4567</span></div>
+            <div><strong>Headquarters</strong><span>National Cyber Coordination Center</span></div>
+          </div>
+        </div>
+        <form class="contact-form reveal" id="contact-form">
+          <label>Full Name
+            <input type="text" name="name" placeholder="Your name" required>
+          </label>
+          <label>Email Address
+            <input type="email" name="email" placeholder="john@example.com" required>
+          </label>
+          <label>Message
+            <textarea name="message" rows="4" placeholder="Tell us more" required></textarea>
+          </label>
+          <button class="btn btn-primary" type="submit">Send Message</button>
+          <p class="form-status" data-status hidden>Thanks — we'll get back to you shortly.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="auth-service.js"></script>
+  <script src="auth-ui.js"></script>
+</body>
+</html>

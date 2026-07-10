@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forgot Password | Cyber Netra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../auth.css">
+</head>
+<body class="auth-page" data-auth-page="forgot-password">
+  <main class="auth-shell">
+    <section class="auth-brand">
+      <a href="../index (3).html">Cyber Netra</a>
+      <h1>Password Reset</h1>
+      <p>Verify your public account mobile number and create a new password.</p>
+    </section>
+
+    <section class="auth-card">
+      <div data-forgot-step="mobile">
+        <div class="auth-heading">
+          <span class="auth-eyebrow">Public Account</span>
+          <h1>Forgot Password?</h1>
+          <p>Enter your mobile number to receive an OTP.</p>
+        </div>
+        <form class="auth-form" id="forgot-mobile-form">
+          <label class="auth-field" for="forgot-mobile">Mobile Number
+            <span class="auth-input-wrap">
+              <span class="auth-prefix">+91</span>
+              <input id="forgot-mobile" data-mobile type="tel" inputmode="numeric" autocomplete="tel" maxlength="10">
+            </span>
+            <span class="auth-error" data-error-for="mobile"></span>
+          </label>
+          <button class="auth-btn auth-btn-primary" type="submit">Send OTP</button>
+          <a class="auth-link" href="../login/public/">Return to Public Login</a>
+        </form>
+      </div>
+
+      <div data-forgot-step="otp" hidden>
+        <div class="auth-heading">
+          <span class="auth-eyebrow">Verify</span>
+          <h1>Verify OTP</h1>
+          <p>Use 123456 for the hackathon demo. Resend available in <span id="resend-countdown">30s</span>.</p>
+        </div>
+        <form class="auth-form" id="forgot-otp-form">
+          <div class="otp-grid">
+            <input data-otp-box type="text" inputmode="numeric" maxlength="1" aria-label="OTP digit 1">
+            <input data-otp-box type="text" inputmode="numeric" maxlength="1" aria-label="OTP digit 2">
+            <input data-otp-box type="text" inputmode="numeric" maxlength="1" aria-label="OTP digit 3">
+            <input data-otp-box type="text" inputmode="numeric" maxlength="1" aria-label="OTP digit 4">
+            <input data-otp-box type="text" inputmode="numeric" maxlength="1" aria-label="OTP digit 5">
+            <input data-otp-box type="text" inputmode="numeric" maxlength="1" aria-label="OTP digit 6">
+          </div>
+          <span class="auth-error" data-error-for="otp"></span>
+          <button class="auth-btn auth-btn-primary" type="submit">Verify OTP</button>
+        </form>
+      </div>
+
+      <div data-forgot-step="password" hidden>
+        <div class="auth-heading">
+          <span class="auth-eyebrow">New Password</span>
+          <h1>Create New Password</h1>
+          <p>Set a secure replacement password for your public account.</p>
+        </div>
+        <form class="auth-form" id="forgot-password-form">
+          <label class="auth-field" for="new-password">Create Password
+            <span class="auth-input-wrap">
+              <input id="new-password" type="password" autocomplete="new-password">
+              <button class="password-toggle" type="button" data-password-toggle="new-password">Show</button>
+            </span>
+          </label>
+          <label class="auth-field" for="confirm-password">Confirm Password
+            <span class="auth-input-wrap">
+              <input id="confirm-password" type="password" autocomplete="new-password">
+              <button class="password-toggle" type="button" data-password-toggle="confirm-password">Show</button>
+            </span>
+          </label>
+          <div class="strength" id="password-strength"><span></span></div>
+          <p>Password strength: <strong id="password-strength-label">Weak</strong></p>
+          <ul class="checklist" id="password-checklist">
+            <li data-check="length">Minimum 8 characters</li>
+            <li data-check="upper">One uppercase letter</li>
+            <li data-check="lower">One lowercase letter</li>
+            <li data-check="number">One number</li>
+            <li data-check="special">One special character</li>
+            <li data-check="match">Passwords match</li>
+          </ul>
+          <button class="auth-btn auth-btn-primary" id="reset-password" type="submit" disabled>Create new password</button>
+        </form>
+      </div>
+
+      <div data-forgot-step="success" hidden>
+        <div class="success-mark">✓</div>
+        <div class="auth-heading">
+          <h1>Password Updated</h1>
+          <p>Your new password is ready for public login.</p>
+        </div>
+        <a class="auth-btn auth-btn-primary" href="../login/public/">Return to Public Login</a>
+      </div>
+    </section>
+  </main>
+  <script src="../auth-service.js"></script>
+  <script src="../auth-pages.js"></script>
+</body>
+</html>

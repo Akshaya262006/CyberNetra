@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Police Login | Cyber Netra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="../../auth.css">
+</head>
+<body class="auth-page" data-auth-page="police-login">
+  <main class="auth-shell">
+    <section class="auth-brand">
+      <a href="../../index (3).html">Cyber Netra</a>
+      <h1>Police Login</h1>
+      <p>Restricted access for authorized police officers and cybercrime investigators.</p>
+    </section>
+
+    <section class="auth-card">
+      <div class="auth-heading">
+        <span class="auth-eyebrow">Authorized Access</span>
+        <h1>Secure Login</h1>
+        <p>Enter your registered mobile number or official user ID.</p>
+      </div>
+      <form class="auth-form" id="police-login-form" novalidate>
+        <label class="auth-field" for="identifier">Registered mobile number or official user ID
+          <span class="auth-input-wrap">
+            <span class="auth-icon" aria-hidden="true">ID</span>
+            <input id="identifier" type="text" autocomplete="username" placeholder="9123456780 or POLICE-CN-001">
+          </span>
+          <span class="auth-error" data-error-for="identifier"></span>
+        </label>
+
+        <label class="auth-field" for="password">Password
+          <span class="auth-input-wrap">
+            <input id="password" type="password" autocomplete="current-password" placeholder="Enter password">
+            <button class="password-toggle" type="button" data-password-toggle="password">Show</button>
+          </span>
+          <span class="auth-error" data-error-for="password"></span>
+        </label>
+
+        <p class="auth-warning">Authorized personnel only. Access attempts may be logged and audited.</p>
+        <span class="auth-error" data-error-for="form"></span>
+        <div class="auth-actions">
+          <button class="auth-btn auth-btn-primary" type="submit">Secure Login</button>
+          <a class="auth-secondary" href="../../index (3).html">Back to Home</a>
+        </div>
+      </form>
+    </section>
+  </main>
+  <script src="../../auth-service.js"></script>
+  <script src="../../auth-pages.js"></script>
+</body>
+</html>

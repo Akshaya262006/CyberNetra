@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In | Cyber Netra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../auth.css">
+</head>
+<body class="auth-page" data-auth-page="signup">
+  <main class="auth-shell">
+    <section class="auth-brand">
+      <a href="../index (3).html">Cyber Netra</a>
+      <h1>Citizen Account</h1>
+      <p>Create a public Cyber Netra account for profile checks, media verification and cybercrime reports.</p>
+    </section>
+
+    <section class="auth-card">
+      <div data-step="mobile">
+        <div class="auth-heading">
+          <span class="auth-eyebrow">Step 1</span>
+          <h1>Create Your Cyber Netra Account</h1>
+          <p>Enter your mobile number to begin.</p>
+        </div>
+        <form class="auth-form" id="mobile-step-form">
+          <label class="auth-field" for="signup-mobile">Mobile Number
+            <span class="auth-input-wrap">
+              <span class="auth-icon" aria-hidden="true">TEL</span>
+              <span class="auth-prefix">+91</span>
+              <input id="signup-mobile" data-mobile type="tel" inputmode="numeric" autocomplete="tel" maxlength="10" placeholder="9876543210">
+            </span>
+            <span class="auth-error" data-error-for="mobile"></span>
+          </label>
+          <button class="auth-btn auth-btn-primary" id="send-otp" type="submit" disabled>Send OTP</button>
+          <div class="auth-link-row">
+            <a class="auth-link" href="../login/public/">Already have an account? Login</a>
+            <a class="auth-link" href="../index (3).html">Back to Home</a>
+          </div>
+        </form>
+      </div>
+
+      <div data-step="otp" hidden>
+        <div class="auth-heading">
+          <span class="auth-eyebrow">Step 2</span>
+          <h1>Verify Your Mobile Number</h1>
+          <p>We sent a 6-digit OTP to <span id="masked-mobile">+91 XXXXX XX000</span>.</p>
+        </div>
+        <form class="auth-form" id="otp-step-form">
+          <div class="otp-grid" aria-label="Enter six digit OTP">
+            <input data-otp-box type="text" inputmode="numeric" maxlength="1" aria-label="OTP digit 1">
+            <input data-otp-box type="text" inputmode="numeric" maxlength="1" aria-label="OTP digit 2">
+            <input data-otp-box type="text" inputmode="numeric" maxlength="1" aria-label="OTP digit 3">
+            <input data-otp-box type="text" inputmode="numeric" maxlength="1" aria-label="OTP digit 4">
+            <input data-otp-box type="text" inputmode="numeric" maxlength="1" aria-label="OTP digit 5">
+            <input data-otp-box type="text" inputmode="numeric" maxlength="1" aria-label="OTP digit 6">
+          </div>
+          <span class="auth-error" data-error-for="otp"></span>
+          <p>Resend OTP available in <span id="resend-countdown">30s</span>.</p>
+          <div class="auth-actions">
+            <button class="auth-btn auth-btn-primary" type="submit">Verify OTP</button>
+            <button class="auth-secondary" id="change-mobile" type="button">Change Mobile Number</button>
+          </div>
+        </form>
+      </div>
+
+      <div data-step="password" hidden>
+        <div class="auth-heading">
+          <span class="auth-eyebrow">Step 3</span>
+          <h1>Create a Secure Password</h1>
+          <p>Use a strong password for your Cyber Netra account.</p>
+        </div>
+        <form class="auth-form" id="password-step-form">
+          <label class="auth-field" for="new-password">Create Password
+            <span class="auth-input-wrap">
+              <input id="new-password" type="password" autocomplete="new-password">
+              <button class="password-toggle" type="button" data-password-toggle="new-password">Show</button>
+            </span>
+          </label>
+          <label class="auth-field" for="confirm-password">Confirm Password
+            <span class="auth-input-wrap">
+              <input id="confirm-password" type="password" autocomplete="new-password">
+              <button class="password-toggle" type="button" data-password-toggle="confirm-password">Show</button>
+            </span>
+          </label>
+          <div class="strength" id="password-strength"><span></span></div>
+          <p>Password strength: <strong id="password-strength-label">Weak</strong></p>
+          <ul class="checklist" id="password-checklist">
+            <li data-check="length">Minimum 8 characters</li>
+            <li data-check="upper">One uppercase letter</li>
+            <li data-check="lower">One lowercase letter</li>
+            <li data-check="number">One number</li>
+            <li data-check="special">One special character</li>
+            <li data-check="match">Passwords match</li>
+          </ul>
+          <button class="auth-btn auth-btn-primary" id="create-account" type="submit" disabled>Create Account</button>
+        </form>
+      </div>
+
+      <div data-step="success" hidden>
+        <div class="success-mark">✓</div>
+        <div class="auth-heading">
+          <span class="auth-eyebrow">Step 4</span>
+          <h1>Account Created Successfully</h1>
+          <p>Your mobile number has been verified and your Cyber Netra account is ready.</p>
+        </div>
+        <a class="auth-btn auth-btn-primary" href="../public/dashboard/">Continue to Dashboard</a>
+      </div>
+    </section>
+  </main>
+  <script src="../auth-service.js"></script>
+  <script src="../auth-pages.js"></script>
+</body>
+</html>
