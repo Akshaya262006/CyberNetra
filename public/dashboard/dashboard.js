@@ -347,6 +347,14 @@
         platformBtns.forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
         selectedPlatform = btn.dataset.platform;
+        updateStepVisibility();
+        // If we are past the max step, reset back to step 1
+        const maxSteps = getMaxSteps();
+        if (wizardStep > maxSteps) {
+          goToStep(maxSteps);
+        } else {
+          goToStep(wizardStep);
+        }
       });
     });
 
@@ -354,11 +362,31 @@
     const prevBtn = document.getElementById("wizard-profile-prev-btn");
     const nextBtn = document.getElementById("wizard-profile-next-btn");
 
+    function getMaxSteps() {
+      return (selectedPlatform === "instagram") ? 3 : 5;
+    }
+
+    function updateStepVisibility() {
+      const maxSteps = getMaxSteps();
+      const node4 = document.getElementById("wizard-profile-step-node-4");
+      const node5 = document.getElementById("wizard-profile-step-node-5");
+      if (node4 && node5) {
+        if (maxSteps === 3) {
+          node4.style.display = "none";
+          node5.style.display = "none";
+        } else {
+          node4.style.display = "flex";
+          node5.style.display = "flex";
+        }
+      }
+    }
+
     window.resetProfileWizard = function () {
       wizardStep = 1;
       uploadedFiles = [];
       document.getElementById("quick-check-evidence-list").innerHTML = "";
       checkForm.reset();
+      updateStepVisibility();
       goToStep(1);
     };
 
@@ -369,6 +397,9 @@
       });
       const activePanel = checkForm.querySelector(`.wizard-profile-step-panel[data-wizard-profile-step="${stepNum}"]`);
       if (activePanel) activePanel.style.display = "block";
+
+      const maxSteps = getMaxSteps();
+      updateStepVisibility();
 
       // Update Node classes
       for (let i = 1; i <= 5; i++) {
@@ -384,7 +415,7 @@
         nextBtn.textContent = "Next Step";
       } else {
         prevBtn.style.display = "inline-flex";
-        if (stepNum === 5) {
+        if (stepNum === maxSteps) {
           nextBtn.textContent = "Analyse Profile";
         } else {
           nextBtn.textContent = "Next Step";
@@ -409,7 +440,9 @@
           return;
         }
       }
-      if (wizardStep < 5) {
+      
+      const maxSteps = getMaxSteps();
+      if (wizardStep < maxSteps) {
         goToStep(wizardStep + 1);
       } else {
         // Trigger scanning sequence
@@ -530,7 +563,7 @@
       document.getElementById("profile-bio-input").value = document.getElementById("ocr-biography").value;
       
       showToast("OCR review details updated.", "success");
-      goToStep(4);
+      goToStep(selectedPlatform === "instagram" ? 3 : 4);
       window.switchCheckProfileSubscreen("input");
     };
 
@@ -680,6 +713,12 @@
         renderProfileTab(scan, tab.dataset.tabName);
       };
     });
+
+    // Hide specific options dynamically for Instagram platform checks
+    const isInsta = scan.platform === "instagram";
+    document.getElementById("res-action-watchlist").style.display = isInsta ? "none" : "block";
+    document.getElementById("res-action-compare").style.display = isInsta ? "none" : "block";
+    document.getElementById("res-action-flag-incorrect").style.display = isInsta ? "none" : "block";
 
     // Control actions
     document.getElementById("res-action-save").onclick = () => {
