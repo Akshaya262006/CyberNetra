@@ -3,66 +3,1266 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Public Dashboard | Cyber Netra</title>
+  <title>Citizen Safety Portal | Cyber Netra</title>
+  
+  <!-- Fonts and Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Style Sheets -->
   <link rel="stylesheet" href="../../styles.css">
   <link rel="stylesheet" href="../../auth.css">
+  <link rel="stylesheet" href="dashboard.css">
 </head>
 <body class="auth-page" data-auth-page="public-dashboard">
-  <main class="dashboard-shell">
-    <nav class="dashboard-nav" aria-label="Public dashboard navigation">
-      <strong>Cyber Netra Public</strong>
-      <a class="is-active" href="#">Dashboard</a>
-      <a href="#">Check Profile</a>
-      <a href="#">Verify Media</a>
-      <a href="#">Cyber Alerts</a>
-      <a href="#">Report Cybercrime</a>
-      <a href="#">Track Complaint</a>
-      <a href="#">Safety Hub</a>
-      <a href="#">Account</a>
-      <button type="button" data-logout>Logout</button>
+
+  <!-- TOAST ALERTS CONTAINER -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- MAIN APP GRID CONTAINER -->
+  <div class="dashboard-shell" id="dashboard-shell">
+    
+    <!-- LEFT SIDEBAR NAVIGATION -->
+    <nav class="dashboard-nav" aria-label="Citizen portal navigation">
+      
+      <!-- Brand Logo Header -->
+      <div class="sidebar-brand-wrapper">
+        <div class="sidebar-logo">
+          <svg viewBox="0 0 100 100">
+            <polygon points="50,15 90,38 90,82 50,95 10,82 10,38" fill="none" stroke="#0f7fff" stroke-width="5" />
+            <circle cx="50" cy="53" r="14" fill="none" stroke="#00d2ff" stroke-width="3" />
+            <line x1="50" y1="15" x2="50" y2="39" stroke="#0f7fff" stroke-width="2" />
+          </svg>
+        </div>
+        <div class="sidebar-brand-text">
+          <strong>Cyber Netra</strong>
+          <span>AI की नज़र, सच्ची पहचान।</span>
+        </div>
+      </div>
+
+      <!-- Navigation Link Lists -->
+      <div class="sidebar-heading">MAIN WORKSPACE</div>
+      <div class="dashboard-nav-menu">
+        <button class="dashboard-nav-item is-active" data-target-view="overview">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>Dashboard</span>
+        </button>
+        <button class="dashboard-nav-item" data-target-view="check-profile">
+          <i class="fa-solid fa-user-shield"></i>
+          <span>Check Profile</span>
+        </button>
+        <button class="dashboard-nav-item" data-target-view="verify-media">
+          <i class="fa-solid fa-photo-film"></i>
+          <span>Verify Media</span>
+        </button>
+        <button class="dashboard-nav-item" data-target-view="my-reports">
+          <i class="fa-solid fa-file-shield"></i>
+          <span>My Reports</span>
+        </button>
+      </div>
+
+      <div class="sidebar-heading">SECURITY CORNER</div>
+      <div class="dashboard-nav-menu">
+        <button class="dashboard-nav-item" data-target-view="cyber-alerts">
+          <i class="fa-solid fa-bell-slash"></i>
+          <span>Cyber Alerts</span>
+        </button>
+        <button class="dashboard-nav-item" data-target-view="safety-hub">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <span>Safety Hub</span>
+        </button>
+        <button class="dashboard-nav-item" data-target-view="saved-watchlist">
+          <i class="fa-solid fa-eye"></i>
+          <span>Saved & Watchlist</span>
+        </button>
+      </div>
+
+      <!-- Footer navigation -->
+      <div class="sidebar-footer">
+        <button class="dashboard-nav-item" data-target-view="help">
+          <i class="fa-solid fa-circle-question"></i>
+          <span>Help & Support</span>
+        </button>
+        <button class="dashboard-nav-item" data-target-view="privacy-info">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Privacy & Security</span>
+        </button>
+        <button class="dashboard-nav-item" data-target-view="settings">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Settings</span>
+        </button>
+        <button class="dashboard-nav-item red-hover" data-logout>
+          <i class="fa-solid fa-power-off"></i>
+          <span>Logout</span>
+        </button>
+      </div>
     </nav>
 
-    <section class="dashboard-main">
-      <div class="dashboard-top">
-        <div>
-          <span class="auth-eyebrow">Citizen Dashboard</span>
-          <h1>Welcome, <span data-user-name>Public User</span></h1>
-          <p>Public users can manage scans, reports, watchlists and safety recommendations here.</p>
+    <!-- RIGHT MAIN WORKSPACE -->
+    <div class="dashboard-main-container">
+      
+      <!-- TOP HEADER BAR -->
+      <header class="top-header">
+        
+        <!-- Toggle button (mobile) and title -->
+        <div class="header-left">
+          <button class="menu-toggle-btn" id="toggle-sidebar-btn" aria-label="Toggle Navigation menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <h1 class="page-title" id="page-title-text">Citizen Portal</h1>
         </div>
-        <a class="auth-secondary" href="../../index (3).html">Back to Home</a>
-      </div>
 
-      <div class="dashboard-grid">
-        <article class="dashboard-card"><span>Profiles Checked</span><strong>18</strong></article>
-        <article class="dashboard-card"><span>Saved Profiles</span><strong>7</strong></article>
-        <article class="dashboard-card"><span>Active Watchlist</span><strong>4</strong></article>
-        <article class="dashboard-card"><span>Reports Submitted</span><strong>3</strong></article>
-      </div>
+        <!-- System Controls -->
+        <div class="header-right">
+          
+          <!-- Quick search -->
+          <div class="global-search-bar">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="global-search" placeholder="Track complaint code...">
+          </div>
 
-      <div class="dashboard-panels">
-        <article class="dashboard-panel">
-          <h2>Recent Scans</h2>
-          <ul class="dashboard-list">
-            <li>Instagram profile scored 87/100: Highly Suspicious</li>
-            <li>LinkedIn recruiter profile scored 62/100: Review Needed</li>
-            <li>Profile image reuse detected across 5 accounts</li>
-          </ul>
-        </article>
-        <article class="dashboard-panel">
-          <h2>Complaint Status</h2>
-          <ul class="dashboard-list">
-            <li>CN-2026-000184: Under Review</li>
-            <li>CN-2026-000173: Additional evidence requested</li>
-            <li>Duplicate-profile alert changed to High Risk</li>
-          </ul>
-        </article>
+          <!-- Language Selector -->
+          <div class="lang-selector-wrapper">
+            <select id="lang-selector" aria-label="Select preferred language">
+              <option value="en">English</option>
+              <option value="hi">हिन्दी (Hindi)</option>
+              <option value="te">తెలుగు (Telugu)</option>
+            </select>
+          </div>
+
+          <!-- Notification indicator bell -->
+          <button class="header-icon-btn" id="notifications-menu-btn" data-target-view="notifications" aria-label="Notifications box">
+            <i class="fa-solid fa-bell"></i>
+            <span class="unread-badge" id="notifications-badge" style="display: none;">0</span>
+          </button>
+
+          <!-- User profile dropdown widget -->
+          <div style="position: relative;">
+            <button class="user-menu-trigger" id="profile-dropdown-trigger">
+              <div class="user-avatar-circle">
+                <i class="fa-solid fa-user-shield"></i>
+              </div>
+              <div class="user-meta-info">
+                <strong data-user-name>Citizen</strong>
+                <span>Clearance: Level-1</span>
+              </div>
+            </button>
+            
+            <!-- User Dropdown Overlay Menu -->
+            <div class="floating-dropdown-menu" id="header-profile-menu">
+              <button class="dropdown-item" data-target-view="settings"><i class="fa-solid fa-user"></i> My Profile</button>
+              <button class="dropdown-item" data-target-view="settings"><i class="fa-solid fa-sliders"></i> Portal Settings</button>
+              <button class="dropdown-item" data-target-view="privacy-info"><i class="fa-solid fa-lock"></i> Privacy Controls</button>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item red" data-logout><i class="fa-solid fa-power-off"></i> Logout</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- MAIN VIEWPORTS SWITCHING -->
+      <main class="dashboard-main-content">
+
+        <!-- ==========================================
+             1. CITIZEN OVERVIEW DASHBOARD VIEW
+             ========================================== -->
+        <section class="portal-view-section active" id="view-overview">
+          
+          <!-- Welcome card -->
+          <div class="overview-welcome-card">
+            <div class="welcome-inner">
+              <h2>Welcome back, <span data-user-name>Citizen</span></h2>
+              <p>Stay informed, verify suspicious profiles or media files, and track your active cybercrime complaints securely.</p>
+            </div>
+          </div>
+
+          <!-- Quick Action Tiles Grid -->
+          <div class="quick-actions-row">
+            <div class="quick-action-tile">
+              <div class="action-tile-icon"><i class="fa-solid fa-user-ninja"></i></div>
+              <h4>Check Profile</h4>
+              <p>Analyse a suspicious social-media account for fake-profile and identity impersonation signals.</p>
+              <button class="btn btn-primary btn-sm" onclick="window.switchTab('check-profile')">Start Check</button>
+            </div>
+            
+            <div class="quick-action-tile tile-cyan">
+              <div class="action-tile-icon"><i class="fa-solid fa-photo-film"></i></div>
+              <h4>Verify Media</h4>
+              <p>Check an image, video or audio clip for digital editing, metadata changes or AI deepfakes.</p>
+              <button class="btn btn-primary btn-sm" onclick="window.switchTab('verify-media')">Upload Media</button>
+            </div>
+
+            <div class="quick-action-tile tile-red">
+              <div class="action-tile-icon"><i class="fa-solid fa-file-invoice"></i></div>
+              <h4>Report Cybercrime</h4>
+              <p>Submit suspicious incident details and forensic analysis evidence directly to inspectors.</p>
+              <button class="btn btn-primary btn-sm" onclick="window.switchTab('my-reports')">Create Report</button>
+            </div>
+
+            <div class="quick-action-tile tile-green">
+              <div class="action-tile-icon"><i class="fa-solid fa-list-check"></i></div>
+              <h4>Track Reports</h4>
+              <p>Check processing updates, officer requests, and action resolutions for submitted cases.</p>
+              <button class="btn btn-primary btn-sm" onclick="window.switchTab('my-reports')">View My Reports</button>
+            </div>
+          </div>
+
+          <!-- Mid Panel Split: Statistics & Recent Logs -->
+          <div class="dashboard-sections-split">
+            
+            <!-- Recent Activities logs -->
+            <div>
+              <div class="activity-timeline-card">
+                <div class="widget-header-row">
+                  <h3><i class="fa-solid fa-list-check"></i> Recent Activity Logs</h3>
+                  <button class="btn btn-ghost btn-sm" onclick="window.switchTab('saved-watchlist')">View Saved Results</button>
+                </div>
+                <div class="activity-list-container" id="recent-activity-container">
+                  <!-- Loaded dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats & Quick advisory updates -->
+            <div>
+              
+              <!-- Quick stats widgets -->
+              <div class="watchlist-widget-card" style="margin-bottom: 24px;">
+                <div class="widget-header-row">
+                  <h3><i class="fa-solid fa-chart-pie"></i> Usage Overview</h3>
+                </div>
+                <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:0">
+                  <div class="dashboard-card text-center" style="padding:14px">
+                    <span style="font-size:11px">PROFILES CHECKED</span>
+                    <strong id="stat-checked-count" style="font-size:24px; margin-top:4px">0</strong>
+                  </div>
+                  <div class="dashboard-card text-center" style="padding:14px">
+                    <span style="font-size:11px">MEDIA VERIFIED</span>
+                    <strong id="stat-verified-count" style="font-size:24px; margin-top:4px">0</strong>
+                  </div>
+                  <div class="dashboard-card text-center" style="padding:14px">
+                    <span style="font-size:11px">REPORTS FILED</span>
+                    <strong id="stat-reports-count" style="font-size:24px; margin-top:4px">0</strong>
+                  </div>
+                  <div class="dashboard-card text-center" style="padding:14px">
+                    <span style="font-size:11px">ACTIVE WATCHLIST</span>
+                    <strong id="stat-watchlist-count" style="font-size:24px; margin-top:4px">0</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick complaint tracking status check bar -->
+              <div class="watchlist-widget-card" style="margin-bottom: 24px;">
+                <div class="widget-header-row">
+                  <h3><i class="fa-solid fa-magnifying-glass"></i> Track a Complaint</h3>
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                  <div class="auth-input-wrap" style="min-height:42px; margin-bottom:10px">
+                    <input type="text" id="overview-track-code" placeholder="e.g. CN-2026-001245">
+                  </div>
+                  <button class="btn btn-primary btn-sm btn-block" id="overview-track-btn">Track Status</button>
+                </div>
+              </div>
+
+              <!-- Rotating Safety Tip banner -->
+              <div class="safety-tip-banner">
+                <div style="display:flex; align-items:center; gap:10px; font-weight:800; color:var(--accent-orange)">
+                  <i class="fa-solid fa-lightbulb"></i>
+                  <span>SAFETY ADVISORY TIP</span>
+                </div>
+                <p id="safety-tip-text">Never share OTPs, banking passwords or identity documents with unknown profiles.</p>
+              </div>
+
+              <!-- Public Cyber Alerts widget list -->
+              <div class="cyber-alerts-widget-card">
+                <div class="widget-header-row">
+                  <h3><i class="fa-solid fa-triangle-exclamation"></i> Latest Cyber Threats</h3>
+                  <button class="btn btn-ghost btn-sm" onclick="window.switchTab('cyber-alerts')">View All</button>
+                </div>
+                <div class="activity-list-container" id="overview-alerts-container">
+                  <!-- Loaded dynamically -->
+                </div>
+              </div>
+
+              <!-- Privacy safeguard reminder -->
+              <div class="dashboard-card text-center" style="padding:14px; border-color:var(--border-color); background:rgba(255,255,255,0.01)">
+                <span style="font-size:10px; color:var(--text-muted); display:block; line-height:1.4">
+                  <i class="fa-solid fa-shield-halved"></i> Privacy Safeguard Enabled. Sensitive user info is masked, and file uploads are deleted after inspection according to safety policies.
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==========================================
+             2. CHECK PROFILE WORKFLOW VIEW
+             ========================================== -->
+        <section class="portal-view-section" id="view-check-profile">
+          <div class="step-form-wrapper">
+            
+            <!-- Step Screen A: Profile url input and screenshot uploads -->
+            <div id="profile-input-screen" class="step-card">
+              <h2 style="margin: 0 0 8px; color:#fff">Scan Social Media Profile</h2>
+              <p style="color:var(--text-muted); font-size:14px; margin-bottom: 24px">Analyse public profile fields across platforms to compute fake-account and coordinate bot triggers.</p>
+              
+              <form id="profile-check-form">
+                <div class="form-group">
+                  <label>Select Target Platform</label>
+                  <div class="select-buttons-grid">
+                    <button type="button" class="select-pill-btn active" data-platform="instagram"><i class="fa-brands fa-instagram"></i> Instagram</button>
+                    <button type="button" class="select-pill-btn" data-platform="facebook"><i class="fa-brands fa-facebook"></i> Facebook</button>
+                    <button type="button" class="select-pill-btn" data-platform="twitter"><i class="fa-brands fa-twitter"></i> X (Twitter)</button>
+                    <button type="button" class="select-pill-btn" data-platform="linkedin"><i class="fa-brands fa-linkedin"></i> LinkedIn</button>
+                    <button type="button" class="select-pill-btn" data-platform="youtube"><i class="fa-brands fa-youtube"></i> YouTube</button>
+                    <button type="button" class="select-pill-btn" data-platform="other"><i class="fa-solid fa-circle-nodes"></i> Other Platform</button>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="profile-url">Social Media Profile Link / URL</label>
+                  <div class="auth-input-wrap">
+                    <i class="fa-solid fa-link auth-icon"></i>
+                    <input type="url" id="profile-url" placeholder="https://instagram.com/suspicious_username">
+                  </div>
+                </div>
+
+                <div class="form-group" style="text-align: center; margin: 16px 0; color:var(--text-muted); font-weight: 700">
+                  <span>- OR ENTER USERNAME -</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="profile-username">Target Profile Username</label>
+                  <div class="auth-input-wrap">
+                    <i class="fa-solid fa-user auth-icon"></i>
+                    <input type="text" id="profile-username" placeholder="e.g. suspicious_username">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Attach Profile Screenshot / Avatar (Optional)</label>
+                  <div class="upload-dropzone" onclick="document.getElementById('profile-img-file').click();">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <p>Drag and drop profile image, or <strong>browse file</strong></p>
+                    <span style="font-size:11px; color:var(--text-muted)">Supports PNG, JPG (Max 5MB)</span>
+                    <input type="file" id="profile-img-file" accept="image/*" style="display: none;">
+                  </div>
+                </div>
+
+                <!-- Privacy check notice -->
+                <div class="auth-warning" style="margin-bottom: 24px">
+                  <i class="fa-solid fa-circle-info"></i> Only analyse profile identifiers that you are legally authorized to review. Cyber Netra provides risk score assessments and not formal legal judgments.
+                </div>
+
+                <button class="btn btn-primary btn-block" type="submit">Analyse Profile</button>
+              </form>
+            </div>
+
+            <!-- Step Screen B: Scanning loading logs sequence visualizer -->
+            <div id="profile-loading-screen" class="step-card" style="display: none;">
+              <div class="scanning-animation-overlay">
+                <div class="scanning-radar-ring">
+                  <i class="fa-solid fa-shield-halved" style="font-size: 38px; color:var(--accent-cyan)"></i>
+                </div>
+                <h3>Forensic Evaluation Matrix Running</h3>
+                <p style="color:var(--text-muted); font-size:13.5px; margin: 0">Computing behaviour indicators, duplicates matching, and image reuse networks...</p>
+                
+                <div class="scanning-logs-box" id="scanning-logs-box">
+                  <!-- Appended logs -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Step Screen C: Profile results display -->
+            <div id="profile-results-screen" style="display: none;">
+              
+              <!-- Result header widget -->
+              <div class="result-header-card">
+                <div class="profile-main-badge-group">
+                  <div class="profile-results-avatar">
+                    <i class="fa-solid fa-user-secret"></i>
+                  </div>
+                  <div class="profile-main-meta">
+                    <h3 id="res-username">@suspicious_username</h3>
+                    <span class="badge badge-cyan" id="res-platform">INSTAGRAM</span>
+                    <p id="res-date" style="margin-top:6px"></p>
+                  </div>
+                </div>
+
+                <div class="risk-ring-progress-wrapper">
+                  <div class="risk-ring-gauge">
+                    <svg viewBox="0 0 100 100" class="circular-progress">
+                      <circle cx="50" cy="50" r="40" class="bg-circle"></circle>
+                      <circle cx="50" cy="50" r="40" class="fg-circle" id="res-risk-circle"></circle>
+                    </svg>
+                    <div class="risk-percentage" id="res-risk-percent">0%</div>
+                  </div>
+                  <div style="display:flex; flex-direction:column; gap:4px">
+                    <span style="font-size:10px; color:var(--text-muted); font-weight:800; letter-spacing:1px">RISK CLASSIFICATION</span>
+                    <span class="badge" id="res-risk-class">LOW RISK</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recommendation note bar -->
+              <div class="dashboard-card" style="margin-bottom: 24px; border-left: 4px solid var(--accent-orange); background:rgba(255, 159, 67, 0.04)">
+                <h5 style="margin: 0 0 6px; color:#fff"><i class="fa-solid fa-circle-exclamation orange"></i> RECOMMENDED ACTION</h5>
+                <p id="res-recommendation" style="margin:0; font-size:13.5px; color:var(--accent-soft)"></p>
+              </div>
+
+              <!-- Details Tabs rows -->
+              <div class="result-tabs-row">
+                <button class="tab-btn profile-res-tab-btn active" data-tab-name="behavior">Behaviour Analysis</button>
+                <button class="tab-btn profile-res-tab-btn" data-tab-name="consistency">Identity Consistency</button>
+                <button class="tab-btn profile-res-tab-btn" data-tab-name="images">Image Authenticity</button>
+                <button class="tab-btn profile-res-tab-btn" data-tab-name="ai">AI Media Checks</button>
+              </div>
+
+              <div class="results-content-panel">
+                
+                <!-- Detailed Findings checks lists -->
+                <div>
+                  <div class="findings-list" id="res-findings-list">
+                    <!-- Tab details injected -->
+                  </div>
+                </div>
+
+                <!-- Sidebar controls and checklists -->
+                <div>
+                  <div class="watchlist-widget-card" style="padding:20px; display:flex; flex-direction:column; gap:12px">
+                    <h4 style="font-size:14px; margin:0; color:#fff">Report Actions</h4>
+                    
+                    <button class="btn btn-primary btn-sm btn-block" id="res-action-save"><i class="fa-solid fa-floppy-disk"></i> Save Result</button>
+                    <button class="btn btn-secondary btn-sm btn-block" id="res-action-watchlist"><i class="fa-solid fa-eye"></i> Add to Watchlist</button>
+                    <button class="btn btn-outline btn-sm btn-block" id="res-action-compare"><i class="fa-solid fa-users-viewfinder"></i> Compare Profiles</button>
+                    <button class="btn btn-outline btn-sm btn-block" id="res-action-report"><i class="fa-solid fa-file-invoice"></i> Report Profile</button>
+                    
+                    <div style="border-top: 1px solid var(--border-color); margin: 8px 0"></div>
+                    
+                    <button class="btn btn-ghost btn-sm btn-block" id="res-action-delete"><i class="fa-solid fa-trash red"></i> Delete Analysis Record</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Disclaimer text notice -->
+              <div class="cta-subtext" style="text-align: center; margin-top:24px; padding: 0 16px">
+                <p style="font-size:12px; color:var(--text-muted); line-height: 1.5">
+                  Disclaimer: Cyber Netra runs machine learning analyses over publicly visible data logs. A high risk score points to anomalies and does not confirm malicious behavior or coordinate fraud by itself.
+                </p>
+              </div>
+
+            </div>
+
+            <!-- Step Screen D: Comparison profile layout -->
+            <div id="profile-compare-screen" class="step-card" style="display: none;">
+              <h2 style="margin:0 0 8px; color:#fff">Compare Social Media Profiles</h2>
+              <p style="color:var(--text-muted); font-size:14px; margin-bottom: 24px">Analyse similarity metrics (pixel matches, username homoglyphs, duplicate bios) between two profiles.</p>
+
+              <form id="profile-comparison-form" style="margin-bottom: 24px">
+                <div class="compare-container">
+                  <div class="compare-profile-card">
+                    <label style="font-weight:700; color:#fff; display:block; margin-bottom:8px">Genuine Original Profile URL</label>
+                    <div class="auth-input-wrap">
+                      <input type="url" id="comp-genuine-url" placeholder="https://instagram.com/original_user" required>
+                    </div>
+                  </div>
+                  
+                  <div class="compare-profile-card suspicious-card">
+                    <label style="font-weight:700; color:#fff; display:block; margin-bottom:8px">Suspicious Copycat Profile URL</label>
+                    <div class="auth-input-wrap">
+                      <input type="url" id="comp-suspect-url" placeholder="https://instagram.com/suspect_copycat" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" style="flex-direction:row; gap:12px">
+                  <button class="btn btn-primary" type="submit">Compare Profiles</button>
+                  <button class="btn btn-secondary" type="button" onclick="renderProfileResultScreen()">Back to Scan</button>
+                </div>
+              </form>
+
+              <!-- Comparison details list grid -->
+              <div id="compare-results-area" style="display: none; animation: authFade 0.3s ease;">
+                <div class="result-header-card" style="margin-bottom:20px; padding:20px; justify-content:space-between">
+                  <h4 style="margin:0">COMPUTED PROFILE SIMILARITY</h4>
+                  <div style="font-size:32px; font-weight:800;" id="comp-similarity-score">0%</div>
+                </div>
+
+                <table class="compare-matrix-table">
+                  <thead>
+                    <tr>
+                      <th>Evaluation Vector</th>
+                      <th>Similarity Result Summary</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="highlight">
+                      <td>Username Similarity</td>
+                      <td id="comp-row-username">Not scanned</td>
+                    </tr>
+                    <tr class="highlight">
+                      <td>Profile Photo Pixel Matching</td>
+                      <td id="comp-row-photo">Not scanned</td>
+                    </tr>
+                    <tr>
+                      <td>Biography Duplication</td>
+                      <td id="comp-row-bio">Not scanned</td>
+                    </tr>
+                    <tr>
+                      <td>Post Content Overlap</td>
+                      <td id="comp-row-post">Not scanned</td>
+                    </tr>
+                    <tr>
+                      <td>Follower Intersections</td>
+                      <td id="comp-row-followers">Not scanned</td>
+                    </tr>
+                    <tr>
+                      <td>Creation Date Discrepancy</td>
+                      <td id="comp-row-creation">Not scanned</td>
+                    </tr>
+                    <tr>
+                      <td>Verification Badge Status</td>
+                      <td id="comp-row-badge">Not scanned</td>
+                    </tr>
+                    <tr class="highlight">
+                      <td>Cloned Account Flags</td>
+                      <td id="comp-row-indicator">Not scanned</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="form-group" style="flex-direction:row; gap:12px">
+                  <button class="btn btn-primary btn-sm" id="res-action-compare-save"><i class="fa-solid fa-floppy-disk"></i> Save Comparison</button>
+                  <button class="btn btn-outline btn-sm" onclick="window.switchTab('my-reports')"><i class="fa-solid fa-triangle-exclamation"></i> Report Impersonation</button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+
+        <!-- ==========================================
+             3. VERIFY MEDIA LAB VIEW
+             ========================================== -->
+        <section class="portal-view-section" id="view-verify-media">
+          <div class="step-form-wrapper">
+            
+            <!-- Input Screen drop zone area -->
+            <div id="media-input-screen" class="step-card">
+              <h2 style="margin: 0 0 8px; color:#fff">Media Authenticity Forensics</h2>
+              <p style="color:var(--text-muted); font-size:14px; margin-bottom: 24px">Detect AI generation, face manipulation, temporal splicing, and speech cloning in files.</p>
+              
+              <!-- Tab selectors: Image, Video, Audio -->
+              <div class="media-tabs-wrapper">
+                <div class="result-tabs-row" style="margin-bottom:0">
+                  <button class="tab-btn media-tab-selector active" data-media-type="image"><i class="fa-solid fa-image"></i> Image Check</button>
+                  <button class="tab-btn media-tab-selector" data-media-type="video"><i class="fa-solid fa-video"></i> Video Check</button>
+                  <button class="tab-btn media-tab-selector" data-media-type="audio"><i class="fa-solid fa-microphone"></i> Audio Check</button>
+                </div>
+              </div>
+
+              <!-- Upload Drag Zone -->
+              <div class="form-group">
+                <div class="upload-dropzone" id="media-dropzone">
+                  <i class="fa-solid fa-file-arrow-up"></i>
+                  <h4>Upload <span id="dropzone-desc-type">IMAGE</span> File</h4>
+                  <p>Drag and drop media here, or <strong>browse files</strong> to start evaluation.</p>
+                  <span style="font-size:11px; color:var(--text-muted)">Supports PNG, JPG, MP4, MP3, WAV (Max 25MB)</span>
+                  <input type="file" id="media-file-input" style="display: none;" accept="image/*,video/*,audio/*">
+                </div>
+              </div>
+
+              <div class="auth-warning" style="margin-bottom:0">
+                <i class="fa-solid fa-shield-halved"></i> Privacy Policy: Uploaded file indices are kept confidential. Content remains encrypted and is purged immediately after completing verification sequences.
+              </div>
+            </div>
+
+            <!-- Result Screen detailed panels -->
+            <div id="media-results-screen" style="display: none;">
+              
+              <!-- Result header progress widget -->
+              <div class="result-header-card">
+                <div class="profile-main-badge-group">
+                  <div class="profile-results-avatar">
+                    <i class="fa-solid fa-file-circle-check"></i>
+                  </div>
+                  <div class="profile-main-meta">
+                    <h3 id="m-res-filename">Uploaded_media.png</h3>
+                    <span class="badge badge-cyan" id="m-res-type">IMAGE</span>
+                    <p id="m-res-date" style="margin-top:6px"></p>
+                  </div>
+                </div>
+
+                <div class="risk-ring-progress-wrapper">
+                  <div class="risk-ring-gauge">
+                    <svg viewBox="0 0 100 100" class="circular-progress">
+                      <circle cx="50" cy="50" r="40" class="bg-circle"></circle>
+                      <circle cx="50" cy="50" r="40" class="fg-circle" id="m-res-risk-circle"></circle>
+                    </svg>
+                    <div class="risk-percentage" id="m-res-risk-percent">0%</div>
+                  </div>
+                  <div style="display:flex; flex-direction:column; gap:4px">
+                    <span style="font-size:10px; color:var(--text-muted); font-weight:800; letter-spacing:1px">AI THREAT RATING</span>
+                    <span class="badge" id="m-res-risk-class">CAUTION</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Media details tabs (switched by type in JS) -->
+              <div class="results-content-panel">
+                
+                <!-- Detailed results metrics -->
+                <div>
+                  
+                  <!-- Summary statement -->
+                  <div class="dashboard-card" style="margin-bottom:20px; border-color:var(--border-color)">
+                    <h5 style="margin: 0 0 8px; color:#fff"><i class="fa-solid fa-microscope"></i> Forensics Summary</h5>
+                    <p id="m-res-summary" style="margin:0; font-size:13px; color:var(--accent-soft); line-height:1.6"></p>
+                  </div>
+
+                  <!-- IMAGE DETAILED CONTAINER -->
+                  <div id="media-result-details-image" style="display: none;">
+                    <div class="findings-list">
+                      <div class="finding-row flagged">
+                        <i class="fa-solid fa-robot"></i>
+                        <div class="finding-row-text">
+                          <h5>Generative Probability</h5>
+                          <p>Synthetically generated face mesh indicators registered <strong id="m-img-score">0%</strong> match probability.</p>
+                        </div>
+                      </div>
+                      <div class="finding-row flagged">
+                        <i class="fa-solid fa-copy"></i>
+                        <div class="finding-row-text">
+                          <h5>Reverse Lookup matches</h5>
+                          <p>Found <strong id="m-img-match-count">0</strong> matches. Source matches cataloged on: <span id="m-img-source">Unknown</span>.</p>
+                        </div>
+                      </div>
+                      <div class="finding-row">
+                        <i class="fa-solid fa-pen-ruler"></i>
+                        <div class="finding-row-text">
+                          <h5>Boundary Manipulations</h5>
+                          <p>Editing brush marks and cropping alteration likelihood scored <strong id="m-img-manip">0%</strong>.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- VIDEO DETAILED CONTAINER -->
+                  <div id="media-result-details-video" style="display: none;">
+                    <div class="dashboard-grid" style="grid-template-columns: repeat(3, 1fr); gap:12px; margin-bottom:20px">
+                      <div class="dashboard-card text-center" style="padding:14px">
+                        <span>DEEPFAKE MATCH</span>
+                        <strong id="m-vid-score">0%</strong>
+                      </div>
+                      <div class="dashboard-card text-center" style="padding:14px">
+                        <span>FACE-SWAP</span>
+                        <strong id="m-vid-swap">0%</strong>
+                      </div>
+                      <div class="dashboard-card text-center" style="padding:14px">
+                        <span>LIP-SYNC ANOMALY</span>
+                        <strong id="m-vid-lips">0%</strong>
+                      </div>
+                    </div>
+                    
+                    <h4 style="font-size:14px; margin: 0 0 12px; color:#fff">Spliced Frame Anomaly Timelines</h4>
+                    <div class="findings-list" id="m-vid-frames-list">
+                      <!-- Frames lists injected -->
+                    </div>
+                  </div>
+
+                  <!-- AUDIO DETAILED CONTAINER -->
+                  <div id="media-result-details-audio" style="display: none;">
+                    <div class="dashboard-grid" style="grid-template-columns: repeat(3, 1fr); gap:12px; margin-bottom:20px">
+                      <div class="dashboard-card text-center" style="padding:14px">
+                        <span>VOICE CLONED</span>
+                        <strong id="m-aud-score">0%</strong>
+                      </div>
+                      <div class="dashboard-card text-center" style="padding:14px">
+                        <span>SYNTHETIC SPEECH</span>
+                        <strong id="m-aud-synth">0%</strong>
+                      </div>
+                      <div class="dashboard-card text-center" style="padding:14px">
+                        <span>MANIPULATION</span>
+                        <strong id="m-aud-manip">0%</strong>
+                      </div>
+                    </div>
+
+                    <!-- Custom waveform effect visualizer -->
+                    <h4 style="font-size:14px; margin:0; color:#fff">Voice Waveform Spectrogram</h4>
+                    <div class="audio-waveform-canvas" id="m-aud-waveform-points">
+                      <!-- Wave bar spans injected -->
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Controls and actions -->
+                <div>
+                  <div class="watchlist-widget-card" style="padding:20px; display:flex; flex-direction:column; gap:12px">
+                    <h4 style="font-size:14px; margin:0; color:#fff">Actions</h4>
+                    
+                    <button class="btn btn-primary btn-sm btn-block" id="m-res-save"><i class="fa-solid fa-floppy-disk"></i> Save Result</button>
+                    <button class="btn btn-secondary btn-sm btn-block" onclick="window.switchTab('my-reports')"><i class="fa-solid fa-file-invoice"></i> File Incident Report</button>
+                    <button class="btn btn-outline btn-sm btn-block" onclick="window.switchTab('verify-media')"><i class="fa-solid fa-rotate-left"></i> Analyze New File</button>
+                    
+                    <div style="border-top: 1px solid var(--border-color); margin: 8px 0"></div>
+                    <button class="btn btn-ghost btn-sm btn-block" id="m-res-delete"><i class="fa-solid fa-trash red"></i> Delete Uploaded File</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+
+        <!-- ==========================================
+             4. MY REPORTS & CREATION FLOW VIEW
+             ========================================== -->
+        <section class="portal-view-section" id="view-my-reports">
+          
+          <!-- Screen A: Complaints registry list and status trackers -->
+          <div id="reports-list-screen" style="animation: authFade 0.2s ease;">
+            
+            <div class="reports-toolbar-row">
+              <div style="display:flex; gap:12px; flex:1">
+                <div class="auth-input-wrap" style="min-height:38px; width:260px">
+                  <i class="fa-solid fa-magnifying-glass auth-icon" style="font-size:12px"></i>
+                  <input type="text" id="reports-search-input" placeholder="Search by case #, category...">
+                </div>
+                
+                <select id="reports-status-filter" class="form-control" style="min-height:38px; padding: 0 10px; background:rgba(7,17,31,0.8); border-color:var(--border-color); color:var(--text-muted); font-weight:700" aria-label="Filter reports by status">
+                  <option value="all">All Statuses</option>
+                  <option value="submitted">Submitted</option>
+                  <option value="info-requested">Info Requested</option>
+                  <option value="action-taken">Action Taken</option>
+                  <option value="closed">Closed</option>
+                </select>
+              </div>
+
+              <button class="btn btn-primary btn-sm" id="trigger-new-report-btn"><i class="fa-solid fa-plus"></i> File New Incident</button>
+            </div>
+
+            <!-- List complaints cards table -->
+            <div class="activity-timeline-card" style="padding:0; overflow-x:auto">
+              <table class="reports-list-table">
+                <thead>
+                  <tr>
+                    <th>Complaint No</th>
+                    <th>Category</th>
+                    <th>Suspect Target</th>
+                    <th>Date Filed</th>
+                    <th>Status</th>
+                    <th>Evidence</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="reports-table-body">
+                  <!-- Loaded dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+          <!-- Screen B: Multi-step Report creation wizard flow -->
+          <div id="reports-create-screen" class="step-card" style="max-width: 720px; margin: 0 auto; display: none;">
+            
+            <!-- Horizontal steps timeline node trackers -->
+            <div class="flow-steps-tracker">
+              <div class="step-tracker-node active" id="report-step-node-1">
+                <div class="step-node-dot">1</div>
+                <span class="step-node-label">Category</span>
+              </div>
+              <div class="step-tracker-node" id="report-step-node-2">
+                <div class="step-node-dot">2</div>
+                <span class="step-node-label">Suspect</span>
+              </div>
+              <div class="step-tracker-node" id="report-step-node-3">
+                <div class="step-node-dot">3</div>
+                <span class="step-node-label">Details</span>
+              </div>
+              <div class="step-tracker-node" id="report-step-node-4">
+                <div class="step-node-dot">4</div>
+                <span class="step-node-label">Consent</span>
+              </div>
+              <div class="step-tracker-node" id="report-step-node-5">
+                <div class="step-node-dot"><i class="fa-solid fa-check"></i></div>
+                <span class="step-node-label">Done</span>
+              </div>
+            </div>
+
+            <div style="border-top:1px solid var(--border-color); margin-bottom: 24px"></div>
+
+            <!-- STEP 1: Category selections -->
+            <div data-report-step="1">
+              <h4 style="margin: 0 0 16px; color:#fff">Select Incident Category</h4>
+              <div class="select-buttons-grid" id="wizard-categories-grid">
+                <!-- Categories buttons injected -->
+              </div>
+            </div>
+
+            <!-- STEP 2: Suspect target forms -->
+            <div data-report-step="2" style="display: none;">
+              <h4 style="margin: 0 0 16px; color:#fff">Enter Suspect Account / Channel Info</h4>
+              
+              <div class="form-group">
+                <label for="incident-suspect-username">Platform Username / Handle (If known)</label>
+                <div class="auth-input-wrap">
+                  <input type="text" id="incident-suspect-username" placeholder="e.g. suspect_copycat">
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="incident-suspect-url">Suspect Profile URL / Post Link</label>
+                <div class="auth-input-wrap">
+                  <input type="url" id="incident-suspect-url" placeholder="https://platform.com/suspect_post">
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="incident-suspect-phone">Suspect Mobile / WhatsApp Number (If known)</label>
+                <div class="auth-input-wrap">
+                  <input type="text" id="incident-suspect-phone" placeholder="e.g. +91 98765 XXXXX">
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 3: Statements and Upload Evidence -->
+            <div data-report-step="3" style="display: none;">
+              <h4 style="margin: 0 0 16px; color:#fff">Incident Details & Evidence Attachments</h4>
+              
+              <div class="form-group">
+                <label for="incident-statement">Describe the Incident *</label>
+                <textarea id="incident-statement" class="form-control" rows="4" placeholder="Describe the incident, how they contacted you, and what details they requested..." required></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>File Attachments (Screenshots, PDFs, Audios)</label>
+                <div class="upload-dropzone" id="wizard-file-zone">
+                  <i class="fa-solid fa-images"></i>
+                  <p>Click to browse and upload screenshots or reports</p>
+                </div>
+                <div id="wizard-evidence-list">
+                  <!-- File strips loaded here -->
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 4: Review and Consent summary declarations -->
+            <div data-report-step="4" style="display: none;">
+              <h4 style="margin: 0 0 16px; color:#fff">Review Details and Consent</h4>
+              
+              <div class="dashboard-card" style="margin-bottom: 20px;">
+                <h5 style="color:#fff; margin:0 0 8px">Incident Summary Preview</h5>
+                <div style="font-size:13px; color:var(--text-muted); display:flex; flex-direction:column; gap:8px">
+                  <div><strong>Category:</strong> <span id="preview-cat">None</span></div>
+                  <div><strong>Target:</strong> <span id="preview-suspect">None</span></div>
+                  <div><strong>Statement:</strong> <span id="preview-desc">None</span></div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer">
+                  <input type="checkbox" id="consent-declaration" style="margin-top: 3px">
+                  <span style="font-size:12.5px; font-weight:normal; line-height:1.5; color:var(--accent-soft)">
+                    I declare that all details entered in this form are accurate to the best of my knowledge. I understand that submitting false reports could lead to account suspension or potential legal penalties.
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <!-- STEP 5: Success landing references -->
+            <div data-report-step="5" style="display: none; text-align: center;">
+              <div class="success-mark" style="margin: 0 auto 20px;">✓</div>
+              <h2>Incident Report Filed</h2>
+              <p style="color:var(--text-muted); font-size:14px; margin-bottom:24px">Your complaint details have been logged in the portal database.</p>
+              
+              <div class="result-header-card" style="justify-content:center; flex-direction:column; gap:8px; margin-bottom: 24px; padding:18px">
+                <span style="font-size:10px; color:var(--text-muted); font-weight:800">CYBER NETRA REFERENCE NUMBER</span>
+                <h3 id="created-ref-number" style="margin:0; font-size:26px; color:var(--accent-cyan)">CN-2026-XXXXXX</h3>
+              </div>
+
+              <!-- Warning regarding FIR government ties -->
+              <div class="auth-warning" style="margin-bottom:24px; text-align: left">
+                <i class="fa-solid fa-triangle-exclamation"></i> <strong>Important Note:</strong> This is a Cyber Netra reference ID code. It does not constitute an official police First Information Report (FIR). If you require formal legal actions, please also register the reference code on the government cybercrime.gov.in portal.
+              </div>
+
+              <div class="form-group" style="flex-direction:row; justify-content:center; gap:12px">
+                <button class="btn btn-primary" id="wizard-finish-btn">Return to Dashboard</button>
+                <button class="btn btn-secondary" id="wizard-receipt-btn"><i class="fa-solid fa-download"></i> Save Receipt</button>
+              </div>
+            </div>
+
+            <!-- Stepper Actions Button triggers -->
+            <div id="wizard-actions-footer" style="display:flex; justify-content:space-between; margin-top:28px">
+              <button class="btn btn-secondary" id="wizard-prev-btn">Back</button>
+              <button class="btn btn-primary" id="wizard-next-btn">Next Step</button>
+            </div>
+
+          </div>
+
+          <!-- Screen C: Detailed view of a single complaint timeline -->
+          <div id="reports-detail-screen" style="display: none;">
+            
+            <button class="btn btn-ghost btn-sm" onclick="window.switchTab('my-reports')" style="margin-bottom:20px"><i class="fa-solid fa-arrow-left"></i> Back to Complaints List</button>
+
+            <div class="results-content-panel">
+              
+              <!-- Report specifications details -->
+              <div>
+                <div class="activity-timeline-card">
+                  <div class="widget-header-row" style="margin-bottom:24px">
+                    <div>
+                      <h2 id="det-report-id" style="color:#fff; margin:0 0 4px">COMPLAINT #CN-2026-000000</h2>
+                      <span class="badge badge-cyan" id="det-report-category">Incident Category</span>
+                    </div>
+                    <span id="det-report-date" style="font-size:12.5px; color:var(--text-muted)"></span>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Target Suspect details</label>
+                    <p id="det-report-suspect" style="margin:0; font-size:14px; color:#fff; font-weight:600"></p>
+                  </div>
+
+                  <div style="border-top:1px solid var(--border-color); margin: 16px 0"></div>
+
+                  <div class="form-group">
+                    <label>Incident Statement Details</label>
+                    <p id="det-report-desc" style="margin:0; font-size:13.5px; color:var(--text-muted); line-height:1.6"></p>
+                  </div>
+                </div>
+
+                <!-- Messages / Requests panel -->
+                <div class="activity-timeline-card" id="det-report-messages-box" style="display: none; border-color:var(--accent-orange)">
+                  <h4 style="font-size:14px; color:#fff; margin: 0 0 14px"><i class="fa-solid fa-envelope orange"></i> Officer Correspondence Requests</h4>
+                  <div id="det-report-messages-list">
+                    <!-- Correspondence rows -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Officer timelines status tracker -->
+              <div>
+                <div class="watchlist-widget-card" style="padding:24px; margin-bottom: 20px;">
+                  <h4 style="font-size:14px; margin: 0 0 20px; color:#fff"><i class="fa-solid fa-bars-progress"></i> Investigation Timeline</h4>
+                  
+                  <div class="timeline-status-tracker" id="det-report-timeline">
+                    <!-- Loaded dynamically -->
+                  </div>
+                </div>
+
+                <div class="watchlist-widget-card" style="padding:20px; display:flex; flex-direction:column; gap:12px">
+                  <h4 style="font-size:13px; margin:0; color:#fff">Complaint Tools</h4>
+                  <button class="btn btn-primary btn-sm btn-block" id="det-add-evidence-btn"><i class="fa-solid fa-plus"></i> Upload Evidence</button>
+                  <button class="btn btn-outline btn-sm btn-block" id="det-withdraw-btn"><i class="fa-solid fa-xmark"></i> Withdraw Case</button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+
+        <!-- ==========================================
+             5. CYBER ALERTS VIEW
+             ========================================== -->
+        <section class="portal-view-section" id="view-cyber-alerts">
+          
+          <!-- Category filters buttons -->
+          <div class="select-buttons-grid" id="alerts-filters-row" style="grid-template-columns:repeat(5, 1fr); margin-bottom: 28px">
+            <!-- Populated dynamically -->
+          </div>
+
+          <!-- Magazine card layout grid -->
+          <div class="alerts-grid-layout" id="alerts-grid-container">
+            <!-- Populated dynamically -->
+          </div>
+        </section>
+
+
+        <!-- ==========================================
+             6. SAFETY HUB VIEW
+             ========================================== -->
+        <section class="portal-view-section" id="view-safety-hub">
+          <div class="dashboard-sections-split" style="grid-template-columns:1.2fr 0.8fr">
+            
+            <!-- List articles categories -->
+            <div>
+              <h3 style="font-size:16px; color:#fff; margin:0 0 16px"><i class="fa-solid fa-book-open"></i> Safety Lessons & Guides</h3>
+              <div class="alerts-grid-layout" id="safety-articles-container" style="grid-template-columns:1fr 1fr; gap:16px">
+                <!-- Loaded dynamically -->
+              </div>
+            </div>
+
+            <!-- Quiz side block -->
+            <div>
+              <div id="safety-quiz-container">
+                <!-- Injected dynamically -->
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+
+        <!-- ==========================================
+             7. SAVED & WATCHLIST VIEW
+             ========================================== -->
+        <section class="portal-view-section" id="view-saved-watchlist">
+          <div class="results-content-panel" style="grid-template-columns:1.1fr 0.9fr">
+            
+            <!-- Saved Result records list -->
+            <div>
+              <div class="widget-header-row">
+                <h3 style="font-size:16px; color:#fff; margin:0"><i class="fa-solid fa-floppy-disk"></i> Saved Offline Scans</h3>
+              </div>
+              <div class="watchlist-widget-list" id="saved-scans-container">
+                <!-- Injected dynamically -->
+              </div>
+            </div>
+
+            <!-- Watchlist monitor entries -->
+            <div>
+              <div class="widget-header-row">
+                <h3 style="font-size:16px; color:#fff; margin:0"><i class="fa-solid fa-eye"></i> Profile Watchlist Monitor</h3>
+              </div>
+              <div class="watchlist-widget-list" id="watchlist-items-container">
+                <!-- Injected dynamically -->
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+
+        <!-- ==========================================
+             8. NOTIFICATIONS CENTER VIEW
+             ========================================== -->
+        <section class="portal-view-section" id="view-notifications">
+          <div class="step-form-wrapper">
+            <div class="widget-header-row" style="margin-bottom: 24px">
+              <h3 style="font-size:16px; color:#fff; margin:0">Notifications Stream</h3>
+              <button class="btn btn-outline btn-sm" id="btn-mark-all-read">Mark all as read</button>
+            </div>
+            
+            <div id="notifications-center-list">
+              <!-- Loaded dynamically -->
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==========================================
+             9. SETTINGS & PRIVACY CONTROLS VIEW
+             ========================================== -->
+        <section class="portal-view-section" id="view-settings">
+          <div class="step-form-wrapper" style="max-width: 800px">
+            
+            <form id="settings-profile-form">
+              <div class="step-card" style="margin-bottom:24px">
+                <h3 style="margin: 0 0 16px; color:#fff"><i class="fa-solid fa-user"></i> Personal Information</h3>
+                
+                <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr; gap:16px; margin-bottom: 0">
+                  <div class="form-group">
+                    <label for="sett-full-name">Full Name</label>
+                    <input type="text" id="sett-full-name" class="form-control" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="sett-email">Email Address</label>
+                    <input type="email" id="sett-email" class="form-control" required>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="sett-mobile">Mobile Number (Non-editable)</label>
+                    <input type="text" id="sett-mobile" class="form-control" disabled>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="sett-language">Portal Preferred Language</label>
+                    <select id="sett-language" class="form-control">
+                      <option value="en">English</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="sett-state">State / Region</label>
+                    <input type="text" id="sett-state" class="form-control">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="sett-district">District / City</label>
+                    <input type="text" id="sett-district" class="form-control">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Privacy data purging buttons -->
+              <div class="step-card" style="margin-bottom:24px; border-color: rgba(255, 77, 94, 0.2)">
+                <h3 style="margin: 0 0 16px; color:var(--accent-red)"><i class="fa-solid fa-user-lock"></i> Data Deletion & Privacy</h3>
+                <p style="font-size:13px; color:var(--text-muted); line-height:1.5; margin: 0 0 16px">
+                  According to Cyber Netra's data privacy compliance guides, you have absolute authority to purge files and delete analysis reports permanently from our cache directories.
+                </p>
+                <div class="form-group" style="flex-direction:row; gap:12px">
+                  <button type="button" class="btn btn-secondary btn-sm" id="sett-btn-delete-data">Purge My Stored Scans</button>
+                  <button type="button" class="btn btn-outline btn-sm red" onclick="alert('Account deletion request initiated.')">Request Account Deletion</button>
+                </div>
+              </div>
+
+              <button class="btn btn-primary" type="submit">Save Settings</button>
+            </form>
+
+          </div>
+        </section>
+
+
+        <!-- ==========================================
+             10. PRIVACY POLICY INFO VIEW
+             ========================================== -->
+        <section class="portal-view-section" id="view-privacy-info">
+          <div class="step-form-wrapper">
+            <div class="step-card">
+              <h2 style="margin: 0 0 12px; color:#fff"><i class="fa-solid fa-shield-halved"></i> Data Security & Privacy Controls</h2>
+              <p style="color:var(--text-muted); line-height:1.6; font-size: 14px">
+                Cyber Netra prioritizes information security and personal data confidentiality. This portal is aligned with ISO 27001:2022 cybersecurity guidelines.
+              </p>
+              
+              <div class="findings-list" style="margin-top:20px">
+                <div class="finding-row">
+                  <i class="fa-solid fa-eye-slash cyan"></i>
+                  <div class="finding-row-text">
+                    <h5>Data Masking</h5>
+                    <p>Phone numbers, transactional details and emails are masked in the portal views to block credential leak vectors.</p>
+                  </div>
+                </div>
+
+                <div class="finding-row">
+                  <i class="fa-solid fa-trash-can cyan"></i>
+                  <div class="finding-row-text">
+                    <h5>Automated Purging</h5>
+                    <p>Evidence uploads are deleted immediately after forensic scoring completes, unless explicitly attached to a submitted report.</p>
+                  </div>
+                </div>
+
+                <div class="finding-row">
+                  <i class="fa-solid fa-lock cyan"></i>
+                  <div class="finding-row-text">
+                    <h5>No Personal Logs Selling</h5>
+                    <p>Cyber Netra is a safety service. We never sell, log or utilize citizen profile searches for commercial monetization.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==========================================
+             11. HELP & SUPPORT VIEW
+             ========================================== -->
+        <section class="portal-view-section" id="view-help">
+          <div class="step-form-wrapper">
+            <div class="step-card">
+              <h2 style="margin: 0 0 16px; color:#fff">Help & Support Desk</h2>
+              <p style="color:var(--text-muted); line-height:1.6; font-size:14px">
+                If you have encountered issues using the AI profile checks, face/media verification matching, or report creations, review the guidelines below.
+              </p>
+
+              <div class="form-group" style="margin-top: 24px">
+                <label>Frequently Asked Questions</label>
+                <div class="findings-list">
+                  <div class="finding-row" style="background:transparent">
+                    <div class="finding-row-text">
+                      <h5 style="color:var(--accent-soft)">How long does media deepfake analysis take?</h5>
+                      <p>Usually takes 10 to 30 seconds depending on frame resolution size and video codecs. Do not reload the page during analysis.</p>
+                    </div>
+                  </div>
+                  <div class="finding-row" style="background:transparent">
+                    <div class="finding-row-text">
+                      <h5 style="color:var(--accent-soft)">Will Cyber Netra report my findings to the police automatically?</h5>
+                      <p>No. We provide risk indexes. You must explicitly create an incident statement in the 'My Reports' step flow to log details.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-top:24px">
+                <label>Contact Support Center</label>
+                <div style="font-size:13px; color:var(--text-muted)">
+                  Email: <strong>support@cybernetra.gov</strong><br>
+                  Helpline: <strong>+91 1800-123-4567</strong> (Toll Free 24/7)
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- OVERLAY DIALOG MODALS -->
+  
+  <!-- Alert Details Modal -->
+  <div class="modal-overlay" id="alert-detail-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="alert-det-title">Alert Details</h3>
+        <button class="modal-close-btn" onclick="closeModal('alert-detail-modal')">&times;</button>
       </div>
-    </section>
-  </main>
+      <div class="modal-body">
+        <span class="badge badge-muted" id="alert-det-date" style="margin-bottom:12px">Published date</span>
+        <p id="alert-det-desc" style="color:var(--text-muted); line-height:1.6; font-size:13.5px; margin-bottom:20px"></p>
+        
+        <h5 style="color:#fff; margin:0 0 8px"><i class="fa-solid fa-triangle-exclamation orange"></i> Warning Signs to Watch For</h5>
+        <ul id="alert-det-warnings" style="padding-left:20px; font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:20px">
+          <!-- Warning signs -->
+        </ul>
+
+        <h5 style="color:#fff; margin:0 0 8px"><i class="fa-solid fa-shield-halved green"></i> Recommended Actions</h5>
+        <ul id="alert-det-actions" style="padding-left:20px; font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:20px">
+          <!-- Recommended Actions -->
+        </ul>
+
+        <div style="font-size:11px; color:var(--text-muted)">Advisory Authority Source: <strong id="alert-det-source">Source</strong></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('alert-detail-modal')">Close</button>
+        <button class="btn btn-primary btn-sm" id="alert-det-action-share"><i class="fa-solid fa-copy"></i> Copy Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Article Lessons Modal -->
+  <div class="modal-overlay" id="article-detail-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="art-det-title">Lesson</h3>
+        <button class="modal-close-btn" onclick="closeModal('article-detail-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <span class="badge badge-cyan" id="art-det-category" style="margin-bottom:12px">Category</span>
+        <p id="art-det-body" style="color:var(--text-muted); line-height:1.6; font-size:13.5px; margin:0"></p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" onclick="closeModal('article-detail-modal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Core Script files -->
   <script src="../../auth-service.js"></script>
+  <script src="mock-data.js"></script>
+  <script src="services.js"></script>
+  <script src="dashboard.js"></script>
   <script src="../../auth-pages.js"></script>
 </body>
 </html>
