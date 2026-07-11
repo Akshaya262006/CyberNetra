@@ -1052,13 +1052,23 @@
     const susBioInput = document.getElementById("comp-suspect-bio");
 
     window.resetCompareScreen = function () {
-      genUsernameInput.value = "ananya_official";
-      genUrlInput.value = "https://instagram.com/ananya_official";
-      genBioInput.value = "Verified Financial Consultant | MBA Finance | Helping citizens build secure wealth portfolios. Business enquiries: contact@ananyasharma.in";
+      if (baseScan) {
+        genUsernameInput.value = "ananya_official";
+        genUrlInput.value = "https://instagram.com/ananya_official";
+        genBioInput.value = "Verified Financial Consultant | MBA Finance | Helping citizens build secure wealth portfolios. Business enquiries: contact@ananyasharma.in";
 
-      susUsernameInput.value = baseScan ? baseScan.username : "ananya_officia1";
-      susUrlInput.value = baseScan ? baseScan.externalWebsite || `https://${baseScan.platform}.com/${baseScan.username}` : "https://ananyasharma-secure-pay.in";
-      susBioInput.value = baseScan ? baseScan.biography : "Verified Financial Consultant | MBA Finance | Helping citizens build secure wealth portfolios. Business enquiries: contact@ananyasharma.in";
+        susUsernameInput.value = baseScan.username;
+        susUrlInput.value = baseScan.externalWebsite || `https://${baseScan.platform}.com/${baseScan.username}`;
+        susBioInput.value = baseScan.biography;
+      } else {
+        genUsernameInput.value = "";
+        genUrlInput.value = "";
+        genBioInput.value = "";
+
+        susUsernameInput.value = "";
+        susUrlInput.value = "";
+        susBioInput.value = "";
+      }
       
       document.getElementById("compare-results-area").style.display = "none";
     };
